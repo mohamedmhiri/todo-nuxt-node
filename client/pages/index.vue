@@ -1,65 +1,44 @@
 <template>
-  <section class="container">
-    <div>
-      <app-logo/>
-      <h1 class="title">
-        client
-      </h1>
-      <h2 class="subtitle">
-        Todo Nuxt App
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green">Documentation</a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey">GitHub</a>
+  <!-- component -->
+  <div class="h-100 w-full flex items-center justify-center bg-teal-lightest font-sans">
+    <div class="bg-white rounded shadow p-6 m-4 w-full lg:w-3/4 lg:max-w-lg">
+      <div class="mb-4">
+        <h1 class="text-grey-darkest">Todo List</h1>
+        <div class="flex mt-4">
+          <input class="shadow appearance-none border rounded w-full py-2 px-3 mr-4 text-grey-darker"
+            placeholder="Add Todo">
+          <button
+            class="flex-no-shrink p-2 border-2 rounded text-teal border-teal hover:text-white hover:bg-teal">Add</button>
+        </div>
+      </div>
+      <div>
+        <div v-for="item in todo" :key="item._id" class="flex mb-4 items-center">
+          <p class="w-full text-grey-darkest">{{ item.label }}</p>
+          <button
+            class="flex-no-shrink p-2 ml-4 mr-2 border-2 rounded hover:text-white text-green border-green hover:bg-green">Done</button>
+          <button
+            class="flex-no-shrink p-2 ml-2 border-2 rounded text-red border-red hover:text-white hover:bg-red">Remove</button>
+        </div>
       </div>
     </div>
-  </section>
+  </div>
 </template>
-
 <script>
-import AppLogo from '~/components/AppLogo.vue'
+import { defineComponent } from 'vue';
 
-export default {
-  components: {
-    AppLogo
+export default defineComponent({
+  data() {
+    return {
+      todo: []
+    }
+  },
+  async created() {
+    await this.fetchTodoData();
+  },
+  methods: {
+    async fetchTodoData() {
+      this.todo = await $fetch('http://localhost:4000/api/todos');
+    }
   }
-}
+});
 </script>
-
-<style>
-.container {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.title {
-  font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* 1 */
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
-</style>
-

@@ -7,7 +7,7 @@ module.exports = {
         try {
             let dbQuery = Todo;
             dbQuery = query.id && query.id.length ? dbQuery.findById(query.id) : dbQuery.find();
-            return dbQuery.sort({ position: 1 }).exec();
+            return dbQuery.select('label _id position state').sort({ position: 1 }).exec();
         } catch (e) {
             console.error(e);
             throw e;
