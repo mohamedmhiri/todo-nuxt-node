@@ -1,0 +1,26 @@
+###
+GET http://localhost:4000/api/todos HTTP/1.1
+
+###
+GET http://localhost:4000/api/todos/6447524a3fc5c2a5497754af HTTP/1.1
+
+###
+POST http://localhost:4000/api/todos HTTP/1.1
+content-type: application/json
+
+{
+    "state": "active",
+    "label": "pp",
+    "position": 7
+}
+
+###
+PUT http://localhost:4000/api/todos/647422a12d805217b553eeb5 HTTP/1.1
+content-type: application/json
+
+{
+    "state": "completed"
+}
+
+###
+DELETE http://localhost:4000/api/todos/647423342d805217b553eec2 HTTP/1.1
