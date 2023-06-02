@@ -42,8 +42,8 @@
   top: 0;
   left: 0;
   border-radius: 50% !important;
-  width: 27px;
-  height: 27px;
+  width: 26px;
+  height: 26px;
   background-image: linear-gradient(to bottom right, hsl(192, 100%, 67%), hsl(280, 87%, 65%));
 }
 
@@ -64,8 +64,8 @@
   position: absolute;
   top: 1px;
   left: 1px;
-  height: 25px;
-  width: 25px;
+  height: 24px;
+  width: 24px;
   border-radius: 50% !important;
   background-color: white;
 }
