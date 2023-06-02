@@ -297,7 +297,7 @@ input:-ms-input-placeholder {
 }
 
 .shadow {
-  --tw-shadow: 0 3px 6px 0 rgb(0 0 0 / 0.1), 0 3px 6px -1px rgb(0 0 0 / 0.1) !important;
+  --tw-shadow: 0 10px 100px 0 rgb(0 0 0 / 0.1), 0 10px 20px -20px rgb(0 0 0 / 0.1) !important
 }
 </style>
 <style src="./checkbox.css"></style>
