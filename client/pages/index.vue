@@ -16,11 +16,10 @@
         </div>
         <div class="basis-1/12 w-4/12">
           <div class="h-100 w-full flex items-center p-6 container bg-white rounded h-16">
-            <label class="checkbox-block" for="newTodoState" @mouseover="showWhiteMark(key)"
-              @mouseleave="hideWhiteMark(key)">
-              <!-- @click="toggleTodoItemState(key)" -->
-              <input class="new-todo-checkbox" type="checkbox" id="newTodoState"
-                :checked="newTodo.state" @change="toggleTodoItemState(key)" />
+            <label class="checkbox-block" for="newTodoState" @mouseover="showWhiteMark()"
+              @mouseleave="hideWhiteMark()">
+              <input class="todo-checkbox" type="checkbox" id="newTodoState"
+                :checked="newTodo.state" @change="toggleNewTodoItemState()" />
               <span class="checkmark" ref="checkMark"></span>
               <span class="hide-white-mark" ref="whiteMark"></span>
             </label>
@@ -46,13 +45,12 @@
                   @mouseover="showXButton(key)" @mouseleave="hideXButton(key)">
                   <label class="checkbox-block" :for="'todo-item-' + key" @mouseover="showWhiteMarkByKey(key)"
                     @mouseleave="hideWhiteMarkByKey(key)">
-                    <!-- @click="toggleTodoItemState(key)" -->
-                    <input class="new-todo-checkbox" type="checkbox" :id="'todo-item-' + key"
+                    <input class="todo-checkbox" type="checkbox" :id="'todo-item-' + key"
                       :checked="todoItemStateVModels[key]" @change="toggleTodoItemState(key)" />
                     <span class="checkmark" :ref="el => { checkMarks[key] = el }"></span>
                     <span class="hide-white-mark" :ref="el => { whiteMarks[key] = el }"></span>
                   </label>
-                  <!-- <input class="new-todo-checkbox" type="checkbox" /> -->
+                  <!-- <input class="todo-checkbox" type="checkbox" /> -->
                   <p class="w-full text-grey-darkest ml-9 bold-font-weight">{{ item.label }}</p>
                   <button type="button" class="hide-button" :ref="el => { xButtons[key] = el }">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -94,8 +92,9 @@ import { ref, onBeforeMount } from 'vue';
 
 // data init
 let todo = ref([]);
+// should be a const and not within the vue data
 const newTodoInitialValue = { state: false, label: '' };
-const newTodo = ref(newTodoInitialValue);
+const newTodo = ref({ state: false, label: '' });
 const nextPosition = ref(0);
 const currentlyTypingSpanIsDisplayed = ref(false);
 let todoItemStateVModels = ref([]);
@@ -156,7 +155,7 @@ const hideWhiteMarkByKey = (key) => {
   checkMarks.value[key].classList.value = 'checkmark';
 }
 const showWhiteMark = () => {
-  if (newTodoInitialValue.state.value === true) return;
+  if (newTodo.value.state === true) return;
   whiteMark.value.classList.value = 'show-white-mark';
   checkMark.value.classList.value = 'hide-checkmark';
 }
@@ -164,10 +163,15 @@ const hideWhiteMark = () => {
   whiteMark.value.classList.value = 'hide-white-mark';
   checkMark.value.classList.value = 'checkmark';
 }
-const toggleTodoItemState = () => {
+const toggleTodoItemState = (key) => {
+  hideWhiteMarkByKey(key);
+  if (typeof todoItemStateVModels.value[key] !== 'boolean') return;
+  todoItemStateVModels.value[key] = !todoItemStateVModels.value[key];
+}
+const toggleNewTodoItemState = () => {
   hideWhiteMark();
-  if (typeof newTodoInitialValue.state.value !== 'boolean') return;
-  newTodoInitialValue.state.value = !newTodoInitialValue.state.value;
+  if (typeof newTodo.value.state !== 'boolean') return;
+  newTodo.value.state = !newTodo.value.state;
 }
 </script>
 <style>
@@ -241,7 +245,7 @@ const toggleTodoItemState = () => {
   color: hsl(220, 98%, 61%);
 }
 
-.new-todo-checkbox {
+.todo-checkbox {
   position: relative !important;
   vertical-align: middle !important;
 }
