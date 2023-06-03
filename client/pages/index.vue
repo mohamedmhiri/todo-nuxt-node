@@ -16,10 +16,9 @@
         </div>
         <div class="basis-1/12 w-4/12">
           <div class="h-100 w-full flex items-center p-6 container bg-white rounded h-16">
-            <label class="checkbox-block" for="newTodoState" @mouseover="showWhiteMark()"
-              @mouseleave="hideWhiteMark()">
-              <input class="todo-checkbox" type="checkbox" id="newTodoState"
-                :checked="newTodo.state" @change="toggleNewTodoItemState()" />
+            <label class="checkbox-block" for="newTodoState" @mouseover="showWhiteMark()" @mouseleave="hideWhiteMark()">
+              <input class="todo-checkbox" type="checkbox" id="newTodoState" :checked="newTodo.state"
+                @change="toggleNewTodoItemState()" />
               <span class="checkmark" ref="checkMark"></span>
               <span class="hide-white-mark" ref="whiteMark"></span>
             </label>
@@ -33,7 +32,7 @@
               <input class="ml-1 block grow bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400
                 sm:text-sm sm:leading-6 bg-transparent" placeholder="Create a new todo..." v-model="newTodo.label"
                 @keyup.enter="addTodo" @keyup="displayCurrentlyTypingSpan" @mousedown="displayCurrentlyTypingSpan"
-                @mouseout="hideCurrentlyTypingSpan">
+                @mouseleave="hideCurrentlyTypingSpan">
             </div>
           </div>
         </div>
@@ -134,10 +133,10 @@ const displayCurrentlyTypingSpan = () => {
 }
 
 const hideCurrentlyTypingSpan = () => {
-  if (newTodo.value.label.length) {
-    currentlyTypingSpanIsDisplayed.value = false;
-  }
+  if (newTodo.value.label.length) return;
+  currentlyTypingSpanIsDisplayed.value = false;
 }
+
 const showXButton = (key) => {
   xButtons.value[key].classList.value = 'show-button';
 }
@@ -264,11 +263,11 @@ input:focus {
 }
 
 .hide-button {
-  display: none;
+  visibility: hidden;
 }
 
 .show-button {
-  display: block;
+  visibility: visible;
 }
 
 input::-webkit-input-placeholder {
