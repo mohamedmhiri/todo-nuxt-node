@@ -5,7 +5,7 @@
       <div class="flex flex-col items-center justify-center main-content gap-y-8">
         <div class="basis-1/12 w-4/12">
           <div class="h-100 flex-row flex">
-            <h1 class="text-5xl text-white grow tracking-widest">TODO</h1>
+            <h1 class="text-5xl bold-font-family text-white grow tracking-widest">TODO</h1>
             <button type="button basis-1/6">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" class="fill-white w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -15,7 +15,7 @@
           </div>
         </div>
         <div class="basis-1/12 w-4/12">
-          <div class="h-100 w-full flex items-center p-6 container bg-white rounded h-16">
+          <div class="h-100 w-full flex items-center p-3 container bg-white rounded h-14">
             <label class="checkbox-block" for="newTodoState" @mouseover="showWhiteMark()" @mouseleave="hideWhiteMark()">
               <input class="todo-checkbox" type="checkbox" id="newTodoState" :checked="newTodo.state"
                 @change="toggleNewTodoItemState()" />
@@ -24,15 +24,15 @@
             </label>
             <div class="flex items-center grow">
               <span :class="currentlyTypingSpanIsDisplayed ? 'display-content' : 'hidden-content'"
-                class="flex select-none items-center pl-3 text-gray-500 sm:text-sm bg-transparent">Currently
+                class="flex select-none items-center pl-3 text-very-dark-gray sm:text-sm bg-transparent">Currently
                 typing</span>
               <span :class="currentlyTypingSpanIsDisplayed ? 'display-content' : 'hidden-content'"
                 class="ml-1 flex select-none items-center pl-3 text-gray-500 sm:text-sm bg-transparent txt-bright-blue">
                 |</span>
               <input class="ml-1 block grow bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400
-                sm:text-sm sm:leading-6 bg-transparent" placeholder="Create a new todo..." v-model="newTodo.label"
-                @keyup.enter="addTodo" @keyup="displayCurrentlyTypingSpan" @mousedown="displayCurrentlyTypingSpan"
-                @mouseleave="hideCurrentlyTypingSpan">
+                sm:text-sm sm:leading-6 bg-transparent normal-font-size" :placeholder="newTodoPlaceholder"
+                v-model="newTodo.label" @keyup.enter="addTodo" @keyup="displayCurrentlyTypingSpan"
+                @mousedown="displayCurrentlyTypingSpan" @mouseleave="hideCurrentlyTypingSpan">
             </div>
           </div>
         </div>
@@ -40,7 +40,7 @@
           <div class="h-100 max-w-screen-xl flex bg-teal-lightest">
             <div class="bg-white rounded shadow w-full">
               <ul class="divide-y divide-solid todo-list">
-                <li v-for="(item, key) in todo" :key="item._id" class="flex p-6 items-center"
+                <li v-for="(item, key) in todo" :key="item._id" class="flex p-4 items-center"
                   @mouseover="showXButton(key)" @mouseleave="hideXButton(key)">
                   <label class="checkbox-block" :for="'todo-item-' + key" @mouseover="showWhiteMarkByKey(key)"
                     @mouseleave="hideWhiteMarkByKey(key)">
@@ -49,8 +49,7 @@
                     <span class="checkmark" :ref="el => { checkMarks[key] = el }"></span>
                     <span class="hide-white-mark" :ref="el => { whiteMarks[key] = el }"></span>
                   </label>
-                  <!-- <input class="todo-checkbox" type="checkbox" /> -->
-                  <p class="w-full text-grey-darkest ml-9 bold-font-weight">{{ item.label }}</p>
+                  <p class="w-full ml-9 normal-font-weight normal-font-family text-very-dark-gray">{{ item.label }}</p>
                   <button type="button" class="hide-button" :ref="el => { xButtons[key] = el }">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                       stroke="currentColor" class="w-6 h-6">
@@ -59,16 +58,16 @@
                   </button>
                 </li>
               </ul>
-              <div class="sticky p-6 flex flex-row items-center justify-center">
-                <p class="basis-1/4">
+              <div class="sticky p-4 flex flex-row items-center justify-center">
+                <p class="basis-1/4 small-font-size bold-font-weight light-font-family text-dark-gray">
                   {{ todo.length }} item{{ todo.length > 1 ? 's' : '' }} left
                 </p>
                 <div class="basis-2/4 ml-6">
-                  <button class="m-1">All</button>
-                  <button class="m-1">Active</button>
-                  <button class="m-1">Completed</button>
+                  <button class="m-1 small-font-size bold-font-weight normal-font-family text-light-gray">All</button>
+                  <button class="m-1 small-font-size bold-font-weight normal-font-family text-light-gray">Active</button>
+                  <button class="m-1 small-font-size bold-font-weight normal-font-family text-light-gray">Completed</button>
                 </div>
-                <button type="button" class="basis-1/4">
+                <button type="button" class="basis-1/4 small-font-size bold-font-weight light-font-family text-dark-gray">
                   Clear Completed
                 </button>
               </div>
@@ -77,7 +76,7 @@
         </div>
         <div class="basis-1/12 w-4/12">
           <div class="h-100 w-full flex items-center justify-center">
-            <p class="text-gray-500">
+            <p class="text-gray-500 small-font-size bold-font-weight text-light-gray">
               Drag and drop to reorder list
             </p>
           </div>
@@ -97,6 +96,7 @@ const newTodo = ref({ state: false, label: '' });
 const nextPosition = ref(0);
 const currentlyTypingSpanIsDisplayed = ref(false);
 let todoItemStateVModels = ref([]);
+const newTodoPlaceholder = ref('Create a new todo...');
 
 // $refs 
 const checkMark = ref(null);
@@ -120,21 +120,20 @@ const addTodo = async () => {
   nextPosition.value = nextPositionInTodo++;
   newTodo.value.state = newTodo.value.state ? 'completed' : 'active';
   const createNewTodo = Object.assign({ position: nextPosition.value }, newTodo.value);
-  await $fetch('http://localhost:4000/api/todos', {
-    method: 'POST',
-    body: createNewTodo
-  });
+  await $fetch('http://localhost:4000/api/todos', { method: 'POST', body: createNewTodo });
   newTodo.value = newTodoInitialValue;
   await fetchTodoData();
 }
 
 const displayCurrentlyTypingSpan = () => {
   currentlyTypingSpanIsDisplayed.value = true;
+  newTodoPlaceholder.value = '';
 }
 
 const hideCurrentlyTypingSpan = () => {
   if (newTodo.value.label.length) return;
   currentlyTypingSpanIsDisplayed.value = false;
+  newTodoPlaceholder.value = 'Create a new todo...';
 }
 
 const showXButton = (key) => {
@@ -175,20 +174,55 @@ const toggleNewTodoItemState = () => {
 </script>
 <style>
 @font-face {
-  font-family: 'Josefin Sans';
+  font-family: 'Josefin Sans Thin';
+  src: url('~/assets/fonts/static/JosefinSans-Thin.ttf') format('truetype')
+}
+
+@font-face {
+  font-family: 'Josefin Sans Extra Light';
+  src: url('~/assets/fonts/static/JosefinSans-ExtraLight.ttf') format('truetype')
+}
+
+@font-face {
+  font-family: 'Josefin Sans Light';
+  src: url('~/assets/fonts/static/JosefinSans-Light.ttf') format('truetype')
+}
+
+@font-face {
+  font-family: 'Josefin Sans Regular';
   src: url('~/assets/fonts/static/JosefinSans-Regular.ttf') format('truetype')
 }
 
+@font-face {
+  font-family: 'Josefin Sans Medium';
+  src: url('~/assets/fonts/static/JosefinSans-Medium.ttf') format('truetype')
+}
+
+@font-face {
+  font-family: 'Josefin Sans Semi Bold';
+  src: url('~/assets/fonts/static/JosefinSans-SemiBold.ttf') format('truetype')
+}
+
+@font-face {
+  font-family: 'Josefin Sans Bold';
+  src: url('~/assets/fonts/static/JosefinSans-Bold.ttf') format('truetype')
+}
+
 * {
-  font-family: 'Josefin Sans';
+  font-family: 'Josefin Sans Regular';
+  font-size: 18px !important;
 }
 
 .normal-font-size {
   font-size: 18px !important;
 }
 
+.text-5xl {
+  font-size: 3rem !important;
+}
+
 .small-font-size {
-  font-size: 12px !important;
+  font-size: 15px !important;
 }
 
 .normal-font-weight {
@@ -197,6 +231,54 @@ const toggleNewTodoItemState = () => {
 
 .bold-font-weight {
   font-weight: 700 !important;
+}
+
+.thin-font-family {
+  font-family: 'Josefin Sans Thin';
+}
+
+.extra-light-font-family {
+  font-family: 'Josefin Sans Extra Light';
+}
+
+.light-font-family {
+  font-family: 'Josefin Sans Light';
+}
+
+.normal-font-family {
+  font-family: 'Josefin Sans Regular';
+}
+
+.medium-font-family {
+  font-family: 'Josefin Sans Medium';
+}
+
+.semi-bold-font-family {
+  font-family: 'Josefin Sans Semi Bold';
+}
+
+.bold-font-family {
+  font-family: 'Josefin Sans Bold';
+}
+
+.text-very-light-gray {
+  color: hsl(233, 11%, 84%);
+}
+
+.text-very-light-gray {
+  color: hsl(236, 33%, 92%);
+}
+
+.text-light-gray {
+  color: hsl(236, 9%, 61%);
+}
+
+.text-dark-gray {
+  color: hsl(236, 9%, 61%);
+}
+
+.text-very-dark-gray {
+  color: hsl(235, 19%, 35%);
 }
 
 .very-light-gray {
@@ -237,7 +319,7 @@ const toggleNewTodoItemState = () => {
 
 .main-content {
   min-height: 60vh;
-  transform: translateY(-25%);
+  transform: translateY(-30%);
 }
 
 .txt-bright-blue {
@@ -291,7 +373,7 @@ input:-ms-input-placeholder {
 }
 
 .todo-list {
-  max-height: 440px;
+  max-height: 40vh;
   overflow-y: auto;
 }
 
