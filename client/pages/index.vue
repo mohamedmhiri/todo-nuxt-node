@@ -63,9 +63,9 @@
                   {{ todo.length }} item{{ todo.length > 1 ? 's' : '' }} left
                 </p>
                 <div class="basis-2/4 ml-6">
-                  <button class="m-1 small-font-size bold-font-weight normal-font-family text-light-gray">All</button>
-                  <button class="m-1 small-font-size bold-font-weight normal-font-family text-light-gray">Active</button>
-                  <button class="m-1 small-font-size bold-font-weight normal-font-family text-light-gray">Completed</button>
+                  <button @mouseover="onHoverAllItemsButton" @mouseleave="onLeaveAllItemsButton" :class="allItemsButtonColor" class="m-1">All</button>
+                  <button @mouseover="onHoverActiveItemsButton" @mouseleave="onLeaveActiveItemsButton" :class="activeItemsButtonColor" class="m-1">Active</button>
+                  <button @mouseover="onHoverCompletedItemsButton" @mouseleave="onLeaveCompletedItemsButton" :class="completedItemsButtonColor" class="m-1">Completed</button>
                 </div>
                 <button type="button" @mouseover="onHoverClearCompleted" @mouseleave="onLeaveClearCompleted" :class="clearCompletedTextColor" class="basis-1/4 small-font-size">
                   Clear Completed
@@ -96,6 +96,9 @@ const currentlyTypingSpanIsDisplayed = ref(false);
 let todoItemStateVModels = ref([]);
 const newTodoPlaceholder = ref('Create a new todo...');
 const clearCompletedTextColor = ref('bold-font-weight light-font-family text-dark-gray');
+const allItemsButtonColor = ref('small-font-size bold-font-weight normal-font-family text-light-gray');
+const activeItemsButtonColor = ref('small-font-size bold-font-weight normal-font-family text-light-gray');
+const completedItemsButtonColor = ref('small-font-size bold-font-weight normal-font-family text-light-gray');
 
 // $refs 
 const checkMark = ref(null);
@@ -177,6 +180,30 @@ const onHoverClearCompleted = () => {
 
 const onLeaveClearCompleted = () => {
   clearCompletedTextColor.value = 'bold-font-weight light-font-family text-dark-gray';
+}
+
+const onHoverAllItemsButton = () => {
+  allItemsButtonColor.value = 'small-font-size bold-font-weight normal-font-family text-very-dark-gray';
+}
+
+const onLeaveAllItemsButton = () => {
+  allItemsButtonColor.value = 'small-font-size bold-font-weight normal-font-family text-light-gray';
+}
+
+const onHoverActiveItemsButton = () => {
+  activeItemsButtonColor.value = 'small-font-size bold-font-weight normal-font-family text-very-dark-gray';
+}
+
+const onLeaveActiveItemsButton = () => {
+  activeItemsButtonColor.value = 'small-font-size bold-font-weight normal-font-family text-light-gray';
+}
+
+const onHoverCompletedItemsButton = () => {
+  completedItemsButtonColor.value = 'small-font-size bold-font-weight normal-font-family text-very-dark-gray';
+}
+
+const onLeaveCompletedItemsButton = () => {
+  completedItemsButtonColor.value = 'small-font-size bold-font-weight normal-font-family text-light-gray';
 }
 
 </script>
