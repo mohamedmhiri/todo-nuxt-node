@@ -67,7 +67,7 @@
                   <button class="m-1 small-font-size bold-font-weight normal-font-family text-light-gray">Active</button>
                   <button class="m-1 small-font-size bold-font-weight normal-font-family text-light-gray">Completed</button>
                 </div>
-                <button type="button" class="basis-1/4 small-font-size bold-font-weight light-font-family text-dark-gray">
+                <button type="button" @mouseover="onHoverClearCompleted" @mouseleave="onLeaveClearCompleted" :class="clearCompletedTextColor" class="basis-1/4 small-font-size">
                   Clear Completed
                 </button>
               </div>
@@ -90,13 +90,12 @@ import { ref, onBeforeMount } from 'vue';
 
 // data init
 let todo = ref([]);
-// should be a const and not within the vue data
-const newTodoInitialValue = { state: false, label: '' };
 const newTodo = ref({ state: false, label: '' });
 const nextPosition = ref(0);
 const currentlyTypingSpanIsDisplayed = ref(false);
 let todoItemStateVModels = ref([]);
 const newTodoPlaceholder = ref('Create a new todo...');
+const clearCompletedTextColor = ref('bold-font-weight light-font-family text-dark-gray');
 
 // $refs 
 const checkMark = ref(null);
@@ -121,7 +120,7 @@ const addTodo = async () => {
   newTodo.value.state = newTodo.value.state ? 'completed' : 'active';
   const createNewTodo = Object.assign({ position: nextPosition.value }, newTodo.value);
   await $fetch('http://localhost:4000/api/todos', { method: 'POST', body: createNewTodo });
-  newTodo.value = newTodoInitialValue;
+  newTodo.value = { state: false, label: '' };
   await fetchTodoData();
 }
 
@@ -171,6 +170,15 @@ const toggleNewTodoItemState = () => {
   if (typeof newTodo.value.state !== 'boolean') return;
   newTodo.value.state = !newTodo.value.state;
 }
+
+const onHoverClearCompleted = () => {
+  clearCompletedTextColor.value = 'bold-font-weight normal-font-family text-dark-gray';
+}
+
+const onLeaveClearCompleted = () => {
+  clearCompletedTextColor.value = 'bold-font-weight light-font-family text-dark-gray';
+}
+
 </script>
 <style>
 @font-face {
