@@ -2,7 +2,7 @@
 .checkbox-block {
   display: block;
   position: relative;
-  cursor: pointer;
+  cursor: url('~/assets/images/cursor-g1b1b85f61_640_1_18x18.png'), pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -18,7 +18,7 @@
 .checkbox-block input {
   position: absolute;
   opacity: 0;
-  cursor: pointer;
+  cursor: url('~/assets/images/cursor-g1b1b85f61_640_1_18x18.png'), pointer;
   height: 0;
   width: 0;
 }

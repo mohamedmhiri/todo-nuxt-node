@@ -49,7 +49,12 @@
                     <span class="checkmark" :ref="el => { checkMarks[key] = el }"></span>
                     <span class="hide-white-mark" :ref="el => { whiteMarks[key] = el }"></span>
                   </label>
-                  <p class="w-full ml-9 normal-font-weight normal-font-family text-very-dark-gray">{{ item.label }}</p>
+                  <p @click="toggleTodoItemState(key)"
+                    :class="todoItemStateVModels[key] ? 'line-through text-very-light-gray' : 'text-very-dark-gray'"
+                    class="w-full ml-9 normal-font-weight normal-font-family pointer"
+                    :ref="el => { todoItems[key] = el }">
+                    {{ item.label }}
+                  </p>
                   <button type="button" class="hide-button" :ref="el => { xButtons[key] = el }">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                       stroke="currentColor" class="w-6 h-6">
@@ -63,11 +68,15 @@
                   {{ todo.length }} item{{ todo.length > 1 ? 's' : '' }} left
                 </p>
                 <div class="basis-2/4 ml-6">
-                  <button @mouseover="onHoverAllItemsButton" @mouseleave="onLeaveAllItemsButton" :class="allItemsButtonColor" class="m-1">All</button>
-                  <button @mouseover="onHoverActiveItemsButton" @mouseleave="onLeaveActiveItemsButton" :class="activeItemsButtonColor" class="m-1">Active</button>
-                  <button @mouseover="onHoverCompletedItemsButton" @mouseleave="onLeaveCompletedItemsButton" :class="completedItemsButtonColor" class="m-1">Completed</button>
+                  <button @mouseover="onHoverAllItemsButton" @mouseleave="onLeaveAllItemsButton"
+                    :class="allItemsButtonColor" class="m-1">All</button>
+                  <button @mouseover="onHoverActiveItemsButton" @mouseleave="onLeaveActiveItemsButton"
+                    :class="activeItemsButtonColor" class="m-1">Active</button>
+                  <button @mouseover="onHoverCompletedItemsButton" @mouseleave="onLeaveCompletedItemsButton"
+                    :class="completedItemsButtonColor" class="m-1">Completed</button>
                 </div>
-                <button type="button" @mouseover="onHoverClearCompleted" @mouseleave="onLeaveClearCompleted" :class="clearCompletedTextColor" class="basis-1/4 small-font-size">
+                <button type="button" @mouseover="onHoverClearCompleted" @mouseleave="onLeaveClearCompleted"
+                  :class="clearCompletedTextColor" class="basis-1/4 small-font-size">
                   Clear Completed
                 </button>
               </div>
@@ -94,11 +103,16 @@ const newTodo = ref({ state: false, label: '' });
 const nextPosition = ref(0);
 const currentlyTypingSpanIsDisplayed = ref(false);
 let todoItemStateVModels = ref([]);
+// new todo placeholder
 const newTodoPlaceholder = ref('Create a new todo...');
+// clear completed button
 const clearCompletedTextColor = ref('bold-font-weight light-font-family text-dark-gray');
+// buttons style
 const allItemsButtonColor = ref('small-font-size bold-font-weight normal-font-family text-light-gray');
 const activeItemsButtonColor = ref('small-font-size bold-font-weight normal-font-family text-light-gray');
 const completedItemsButtonColor = ref('small-font-size bold-font-weight normal-font-family text-light-gray');
+// todo items marked as completed
+const itemCompleted = ref('');
 
 // $refs 
 const checkMark = ref(null);
@@ -106,6 +120,7 @@ const checkMarks = ref([]);
 const whiteMark = ref(null);
 const whiteMarks = ref([]);
 const xButtons = ref([]);
+const todoItems = ref([]);
 
 onBeforeMount(async () => {
   await fetchTodoData();
@@ -167,6 +182,9 @@ const toggleTodoItemState = (key) => {
   hideWhiteMarkByKey(key);
   if (typeof todoItemStateVModels.value[key] !== 'boolean') return;
   todoItemStateVModels.value[key] = !todoItemStateVModels.value[key];
+  todoItems.value[key].classList.value = !todoItems.value[key].classList.value.includes('line-through') ?
+    'w-full ml-9 normal-font-weight normal-font-family line-through text-very-light-gray pointer' :
+    'w-full ml-9 normal-font-weight normal-font-family text-very-dark-gray pointer';
 }
 const toggleNewTodoItemState = () => {
   hideWhiteMark();
@@ -318,6 +336,14 @@ const onLeaveCompletedItemsButton = () => {
 
 .very-light-gray {
   background-color: hsl(0, 0%, 98%);
+}
+
+.pointer {
+  cursor: url('~/assets/images/cursor-g1b1b85f61_640_1_18x18.png'), pointer;
+}
+
+button {
+  cursor: url('~/assets/images/cursor-g1b1b85f61_640_1_18x18.png'), pointer;
 }
 
 .w-screen {
