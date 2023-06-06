@@ -27,7 +27,7 @@
                 class="flex select-none items-center pl-3 text-very-dark-gray sm:text-sm bg-transparent">Currently
                 typing</span>
               <span :class="currentlyTypingSpanIsDisplayed ? 'display-content' : 'hidden-content'"
-                class="ml-1 flex select-none items-center pl-3 text-gray-500 sm:text-sm bg-transparent txt-bright-blue">
+                class="ml-1 flex select-none items-center pl-3 text-gray-500 sm:text-sm bg-transparent text-bright-blue">
                 |</span>
               <input class="ml-1 block grow bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400
                 sm:text-sm sm:leading-6 bg-transparent normal-font-size" :placeholder="newTodoPlaceholder"
@@ -69,11 +69,11 @@
                 </p>
                 <div class="basis-2/4 ml-6">
                   <button @mouseover="onHoverAllItemsButton" @mouseleave="onLeaveAllItemsButton"
-                    :class="allItemsButtonColor" class="m-1">All</button>
+                    @click="onClickAllItemsButton" :class="allItemsButtonColor" class="m-1">All</button>
                   <button @mouseover="onHoverActiveItemsButton" @mouseleave="onLeaveActiveItemsButton"
-                    :class="activeItemsButtonColor" class="m-1">Active</button>
+                    @click="onClickActiveItemsButton" :class="activeItemsButtonColor" class="m-1">Active</button>
                   <button @mouseover="onHoverCompletedItemsButton" @mouseleave="onLeaveCompletedItemsButton"
-                    :class="completedItemsButtonColor" class="m-1">Completed</button>
+                    @click="onClickCompletedItemsButton" :class="completedItemsButtonColor" class="m-1">Completed</button>
                 </div>
                 <button type="button" @mouseover="onHoverClearCompleted" @mouseleave="onLeaveClearCompleted"
                   :class="clearCompletedTextColor" class="basis-1/4 small-font-size">
@@ -200,28 +200,75 @@ const onLeaveClearCompleted = () => {
   clearCompletedTextColor.value = 'bold-font-weight light-font-family text-dark-gray';
 }
 
+const getResetFilterButtonStyle = () => {
+  return 'small-font-size bold-font-weight normal-font-family text-light-gray';
+}
+
+const getPrimaryFilterButtonStyle = () => {
+  return 'small-font-size bold-font-weight normal-font-family text-bright-blue';
+}
+
+const onClickAllItemsButton = () => {
+  allItemsButtonColor.value = getPrimaryFilterButtonStyle();
+  // TODO will have a parent component and 3 button filter child components
+  // clicking on one of them will change the component class style
+  // and $emit an event to the parent component 
+  // which will notify the other 2 child components so that each one will reset
+  // it's class style
+  activeItemsButtonColor.value = getResetFilterButtonStyle();
+  completedItemsButtonColor.value = getResetFilterButtonStyle();
+}
+
 const onHoverAllItemsButton = () => {
+  if (allItemsButtonColor.value.includes('text-bright-blue')) return;
   allItemsButtonColor.value = 'small-font-size bold-font-weight normal-font-family text-very-dark-gray';
 }
 
 const onLeaveAllItemsButton = () => {
-  allItemsButtonColor.value = 'small-font-size bold-font-weight normal-font-family text-light-gray';
+  if (allItemsButtonColor.value.includes('text-bright-blue')) return;
+  allItemsButtonColor.value = getResetFilterButtonStyle();
 }
 
 const onHoverActiveItemsButton = () => {
+  if (activeItemsButtonColor.value.includes('text-bright-blue')) return;
   activeItemsButtonColor.value = 'small-font-size bold-font-weight normal-font-family text-very-dark-gray';
 }
 
+const onClickActiveItemsButton = () => {
+  activeItemsButtonColor.value = getPrimaryFilterButtonStyle();
+  // TODO will have a parent component and 3 button filter child components
+  // clicking on one of them will change the component class style
+  // and $emit an event to the parent component 
+  // which will notify the other 2 child components so that each one will reset
+  // it's class style
+  completedItemsButtonColor.value = getResetFilterButtonStyle();
+  allItemsButtonColor.value = getResetFilterButtonStyle();
+}
+
 const onLeaveActiveItemsButton = () => {
-  activeItemsButtonColor.value = 'small-font-size bold-font-weight normal-font-family text-light-gray';
+  if (activeItemsButtonColor.value.includes('text-bright-blue')) return;
+  activeItemsButtonColor.value = getResetFilterButtonStyle();
+}
+
+const onClickCompletedItemsButton = () => {
+  completedItemsButtonColor.value = getPrimaryFilterButtonStyle();
+  // TODO will have a parent component and 3 button filter child components
+  // clicking on one of them will change the component class style
+  // and $emit an event to the parent component 
+  // which will notify the other 2 child components so that each one will reset
+  // it's class style
+  activeItemsButtonColor.value = getResetFilterButtonStyle();
+  allItemsButtonColor.value = getResetFilterButtonStyle();
 }
 
 const onHoverCompletedItemsButton = () => {
+  if (completedItemsButtonColor.value.includes('text-bright-blue')) return;
   completedItemsButtonColor.value = 'small-font-size bold-font-weight normal-font-family text-very-dark-gray';
 }
 
 const onLeaveCompletedItemsButton = () => {
-  completedItemsButtonColor.value = 'small-font-size bold-font-weight normal-font-family text-light-gray';
+  if (completedItemsButtonColor.value.includes('text-bright-blue')) return;
+  completedItemsButtonColor.value = getResetFilterButtonStyle();
 }
 
 </script>
@@ -383,7 +430,7 @@ button {
   transform: translateY(-30%);
 }
 
-.txt-bright-blue {
+.text-bright-blue {
   color: hsl(220, 98%, 61%);
 }
 
