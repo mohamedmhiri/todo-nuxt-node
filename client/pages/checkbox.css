@@ -72,7 +72,7 @@
   background-color: hsl(235, 24%, 19%);
 }
 
-.dark .show-white-mark {
+.show-white-mark {
   display: block;
   position: absolute;
   top: 1px;
