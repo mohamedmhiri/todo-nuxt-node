@@ -9,9 +9,7 @@
   user-select: none;
   width: 24px;
   border-radius: 50%;
-  border-color: hsl(236, 33%, 92%) !important;
-  /*border-color: hsl(236, 33%, 92%) !important;*/
-  
+  border-color: hsl(236, 33%, 92%) !important;  
 }
 
 /* Hide the browser's default checkbox */
@@ -33,8 +31,15 @@
   background-color: transparent !important;
   border-radius: 50% !important;
   border-style: solid !important;
-  border-color: hsl(236, 33%, 92%) !important;
   border-width: 2px;
+}
+
+.light .checkmark {
+  border-color: hsl(236, 33%, 92%) !important;
+}
+
+.dark .checkmark {
+  border-color: hsl(233, 14%, 35%) !important;
 }
 
 .hide-checkmark {
@@ -59,7 +64,15 @@
   background-color: white;
 }
 
-.show-white-mark {
+.light .show-white-mark {
+  background-color: white;
+}
+
+.dark .show-white-mark {
+  background-color: hsl(235, 24%, 19%);
+}
+
+.dark .show-white-mark {
   display: block;
   position: absolute;
   top: 1px;
@@ -67,7 +80,6 @@
   height: 24px;
   width: 24px;
   border-radius: 50% !important;
-  background-color: white;
 }
 
 /* When the checkbox is checked, add a blue background */

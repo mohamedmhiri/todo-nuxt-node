@@ -1,21 +1,30 @@
 <template>
   <div class="flex flex-col w-screen hidden-overflow">
-    <div class="flex-auto bg-desktop-light"></div>
-    <div class="grow hidden-overflow very-light-gray">
+    <div class="flex-auto bg-desktop"></div>
+    <div class="grow hidden-overflow main-background">
       <div class="flex flex-col items-center justify-center main-content gap-y-8">
         <div class="basis-1/12 w-4/12">
           <div class="h-100 flex-row flex">
             <h1 class="text-5xl bold-font-family text-white grow tracking-widest">TODO</h1>
-            <button type="button basis-1/6">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" class="fill-white w-6 h-6">
+            <button type="button basis-1/6" @click="useDarkMode"
+              v-if="colorMode.value == 'light' || colorMode.value == 'system'">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="white"
+                class="fill-white w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round"
                   d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+              </svg>
+            </button>
+            <button type="button basis-1/6" @click="useLightMode" v-if="colorMode.value == 'dark'">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="white"
+                class="fill-white w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
               </svg>
             </button>
           </div>
         </div>
         <div class="basis-1/12 w-4/12">
-          <div class="h-100 w-full flex items-center p-3 container bg-white rounded h-14">
+          <div class="h-100 w-full flex items-center p-3 container input-box rounded h-14">
             <label class="checkbox-block" for="newTodoState" @mouseover="showWhiteMark()" @mouseleave="hideWhiteMark()">
               <input class="todo-checkbox" type="checkbox" id="newTodoState" :checked="newTodo.state"
                 @change="toggleNewTodoItemState()" />
@@ -24,12 +33,12 @@
             </label>
             <div class="flex items-center grow">
               <span :class="currentlyTypingSpanIsDisplayed ? 'display-content' : 'hidden-content'"
-                class="flex select-none items-center pl-3 text-very-dark-gray sm:text-sm bg-transparent">Currently
+                class="ml-9 flex select-none items-center pl-3 text-very-dark-gray sm:text-sm bg-transparent">Currently
                 typing</span>
               <span :class="currentlyTypingSpanIsDisplayed ? 'display-content' : 'hidden-content'"
                 class="ml-1 flex select-none items-center pl-3 text-gray-500 sm:text-sm bg-transparent text-bright-blue">
                 |</span>
-              <input class="ml-1 block grow bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400
+              <input class="ml-9 block grow bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400
                 sm:text-sm sm:leading-6 bg-transparent normal-font-size" :placeholder="newTodoPlaceholder"
                 v-model="newTodo.label" @keyup.enter="addTodo" @keyup="displayCurrentlyTypingSpan"
                 @mousedown="displayCurrentlyTypingSpan" @mouseleave="hideCurrentlyTypingSpan">
@@ -38,7 +47,7 @@
         </div>
         <div class="grow w-4/12">
           <div class="h-100 max-w-screen-xl flex bg-teal-lightest">
-            <div class="bg-white rounded shadow w-full">
+            <div class="list-box rounded shadow w-full">
               <ul class="divide-y divide-solid todo-list">
                 <li v-for="(item, key) in todo" :key="item._id" class="flex p-4 items-center"
                   @mouseover="showXButton(key)" @mouseleave="hideXButton(key)">
@@ -57,7 +66,7 @@
                   </p>
                   <button type="button" class="hide-button" :ref="el => { xButtons[key] = el }">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                      stroke="currentColor" class="w-6 h-6">
+                      stroke="currentColor" class="w-6 h-6 x-button">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
@@ -96,6 +105,7 @@
 </template>
 <script setup>
 import { ref, onBeforeMount } from 'vue';
+const colorMode = useColorMode();
 
 // data init
 let todo = ref([]);
@@ -193,7 +203,11 @@ const toggleNewTodoItemState = () => {
 }
 
 const onHoverClearCompleted = () => {
-  clearCompletedTextColor.value = 'bold-font-weight normal-font-family text-dark-gray';
+  if (colorMode.value.includes('dark')) {
+    clearCompletedTextColor.value = 'bold-font-weight normal-font-family text-very-dark-gray';
+  } else {
+    clearCompletedTextColor.value = 'bold-font-weight normal-font-family text-dark-gray';
+  }
 }
 
 const onLeaveClearCompleted = () => {
@@ -269,6 +283,14 @@ const onHoverCompletedItemsButton = () => {
 const onLeaveCompletedItemsButton = () => {
   if (completedItemsButtonColor.value.includes('text-bright-blue')) return;
   completedItemsButtonColor.value = getResetFilterButtonStyle();
+}
+
+const useDarkMode = () => {
+  colorMode.value = 'dark';
+}
+
+const useLightMode = () => {
+  colorMode.value = 'light';
 }
 
 </script>
@@ -361,28 +383,61 @@ const onLeaveCompletedItemsButton = () => {
   font-family: 'Josefin Sans Bold';
 }
 
-.text-very-light-gray {
-  color: hsl(233, 11%, 84%);
-}
-
-.text-very-light-gray {
+.light .text-very-light-gray {
   color: hsl(236, 33%, 92%);
 }
 
-.text-light-gray {
+.dark .text-very-light-gray {
+  color: hsl(233, 14%, 35%);
+}
+
+.light .text-light-gray {
   color: hsl(236, 9%, 61%);
 }
 
-.text-dark-gray {
+.dark .text-light-gray {
+  color: hsl(233, 14%, 35%);
+}
+
+.light .text-dark-gray {
   color: hsl(236, 9%, 61%);
 }
 
-.text-very-dark-gray {
+.dark .text-dark-gray {
+  color: hsl(233, 14%, 35%);
+}
+
+.light .text-very-dark-gray {
   color: hsl(235, 19%, 35%);
 }
 
-.very-light-gray {
+.dark .text-very-dark-gray {
+  color: hsl(234, 39%, 85%);
+}
+
+.light .main-background {
   background-color: hsl(0, 0%, 98%);
+}
+
+.light .x-button {
+  color: hsl(235, 19%, 35%);
+}
+
+.dark .x-button {
+  color: hsl(233, 14%, 35%);
+}
+
+/*
+- Very Dark Blue: hsl(235, 21%, 11%)
+- Very Dark Desaturated Blue: hsl(235, 24%, 19%)
+- Light Grayish Blue: hsl(234, 39%, 85%)
+- Light Grayish Blue (hover): hsl(236, 33%, 92%)
+- Dark Grayish Blue: hsl(234, 11%, 52%)
+- Very Dark Grayish Blue: hsl(233, 14%, 35%)
+- Very Dark Grayish Blue: hsl(237, 14%, 26%)
+*/
+.dark .main-background {
+  background-color: hsl(235, 21%, 11%);
 }
 
 .pointer {
@@ -394,35 +449,43 @@ button {
 }
 
 .w-screen {
-  max-height: 100vh !important;
+  height: 100vh !important;
 }
 
-.bg-desktop-light {
+.light .bg-desktop {
   background: url('~/assets/images/bg-desktop-light.jpg');
   background-repeat: no-repeat;
-  background-size: 100vw;
+  /*background-size: cover;*/
+  background-size: cover;
+  /* width: 100%;
+  min-height: 100%; */
   min-height: 28vh;
+  max-width: 100%;
 }
 
-.bg-desktop-dark {
+.dark .bg-desktop {
   background: url('~/assets/images/bg-desktop-dark.jpg');
   background-repeat: no-repeat;
-  background-size: 100vw;
+  background-size: cover;
+  /*background-size: 100%;*/
   min-height: 28vh;
+  max-width: 100%;
 }
 
-.bg-mobile-light {
+.light .bg-mobile-light {
   background: url('~/assets/images/bg-mobile-light.jpg');
   background-repeat: no-repeat;
-  background-size: 100vw;
-  min-height: 28vh;
+  background-size: cover;
+  /*min-height: 28vh;*/
+  max-width: 100%;
 }
 
-.bg-mobile-dark {
+.dark .bg-mobile-dark {
   background: url('~/assets/images/bg-mobile-dark.jpg');
   background-repeat: no-repeat;
-  background-size: 100vw;
-  min-height: 28vh;
+  background-size: cover;
+  /*min-height: 28vh;*/
+  max-width: 100%;
 }
 
 .main-content {
@@ -487,6 +550,34 @@ input:-ms-input-placeholder {
 
 .shadow {
   --tw-shadow: 0 10px 100px 0 rgb(0 0 0 / 0.1), 0 10px 20px -20px rgb(0 0 0 / 0.1) !important
+}
+
+.light .input-box {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.dark .input-box {
+  background-color: hsl(235, 24%, 19%) !important;
+
+}
+
+.light .list-box {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.dark .list-box {
+  background-color: hsl(235, 24%, 19%) !important;
+
+}
+
+.light li {
+  border-color: #e5e7eb !important;
+}
+
+.dark li {
+  border-color: hsl(233, 14%, 35%) !important;
 }
 </style>
 <style src="./checkbox.css"></style>
