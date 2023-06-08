@@ -2,10 +2,12 @@
   <div class="flex flex-col w-screen hidden-overflow">
     <div class="flex-auto bg-desktop"></div>
     <div class="grow hidden-overflow main-background">
-      <div class="flex flex-col items-center justify-center main-content gap-y-8">
-        <div class="basis-1/12 w-4/12">
-          <div class="h-100 flex-row flex">
-            <h1 class="text-5xl bold-font-family text-white grow tracking-widest">TODO</h1>
+      <div class="flex flex-col items-center justify-center main-content lg:gap-y-8">
+        <div class="basis-1/12 lg:w-4/12 xl:w-4/12 sm:w-10/12 md:w-10/12">
+          <div class="h-100 max-w-screen-xl flex-row flex">
+            <h1 class="text-5xl text-h1 bold-font-family text-white grow tracking-widest w-full">
+              TODO
+            </h1>
             <button type="button basis-1/6" @click="useDarkMode"
               v-if="colorMode.value == 'light' || colorMode.value == 'system'">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="white"
@@ -23,33 +25,35 @@
             </button>
           </div>
         </div>
-        <div class="basis-1/12 w-4/12">
-          <div class="h-100 w-full flex items-center p-3 container input-box rounded h-14">
-            <label class="checkbox-block" for="newTodoState" @mouseover="showWhiteMark()" @mouseleave="hideWhiteMark()">
-              <input class="todo-checkbox" type="checkbox" id="newTodoState" :checked="newTodo.state"
-                @change="toggleNewTodoItemState()" />
-              <span class="checkmark" ref="checkMark"></span>
-              <span class="hide-white-mark" ref="whiteMark"></span>
-            </label>
-            <div class="flex items-center grow">
-              <span :class="currentlyTypingSpanIsDisplayed ? 'display-content' : 'hidden-content'"
-                class="ml-9 flex select-none items-center pl-3 text-very-dark-gray sm:text-sm bg-transparent">Currently
-                typing</span>
-              <span :class="currentlyTypingSpanIsDisplayed ? 'display-content' : 'hidden-content'"
-                class="ml-1 flex select-none items-center pl-3 text-gray-500 sm:text-sm bg-transparent text-bright-blue">
-                |</span>
-              <input class="ml-9 block grow bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400
-                sm:text-sm sm:leading-6 bg-transparent normal-font-size" :placeholder="newTodoPlaceholder"
-                v-model="newTodo.label" @keyup.enter="addTodo" @keyup="displayCurrentlyTypingSpan"
-                @mousedown="displayCurrentlyTypingSpan" @mouseleave="hideCurrentlyTypingSpan">
+        <div class="basis-1/12 lg:w-4/12 xl:w-4/12 sm:w-10/12 md:w-10/12">
+          <div class="max-w-screen-xl">
+            <div class="h-100 w-full flex items-center p-3 container input-box rounded">
+              <label class="checkbox-block" for="newTodoState" @mouseover="showWhiteMark()" @mouseleave="hideWhiteMark()">
+                <input class="todo-checkbox" type="checkbox" id="newTodoState" :checked="newTodo.state"
+                  @change="toggleNewTodoItemState()" />
+                <span class="checkmark" ref="checkMark"></span>
+                <span class="hide-white-mark" ref="whiteMark"></span>
+              </label>
+              <div class="flex items-center grow">
+                <span v-if="!isMobile" :class="currentlyTypingSpanIsDisplayed ? 'display-content' : 'hidden-content'"
+                  class="ml-9 flex select-none items-center pl-3 text-very-dark-gray sm:text-sm bg-transparent">Currently
+                  typing</span>
+                <span v-if="!isMobile" :class="currentlyTypingSpanIsDisplayed ? 'display-content' : 'hidden-content'"
+                  class="ml-1 flex select-none items-center pl-3 text-gray-500 sm:text-sm bg-transparent text-bright-blue">
+                  |</span>
+                <input class="lg:ml-9 new-todo-input block grow bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400
+                  sm:text-sm sm:leading-6 bg-transparent normal-font-size" :placeholder="newTodoPlaceholder"
+                  v-model="newTodo.label" @keyup.enter="addTodo" @keyup="displayCurrentlyTypingSpan"
+                  @mousedown="displayCurrentlyTypingSpan" @mouseleave="hideCurrentlyTypingSpan">
+              </div>
             </div>
           </div>
         </div>
-        <div class="grow w-4/12">
+        <div class="grow lg:w-4/12 xl:w-4/12 sm:w-10/12 md:w-10/12">
           <div class="h-100 max-w-screen-xl flex bg-teal-lightest">
             <div class="list-box rounded shadow w-full">
               <ul class="divide-y divide-solid todo-list">
-                <li v-for="(item, key) in todo" :key="item._id" class="flex p-4 items-center"
+                <li v-for="(item, key) in todo" :key="item._id" class="flex item-style items-center"
                   @mouseover="showXButton(key)" @mouseleave="hideXButton(key)">
                   <label class="checkbox-block" :for="'todo-item-' + key" @mouseover="showWhiteMarkByKey(key)"
                     @mouseleave="hideWhiteMarkByKey(key)">
@@ -72,11 +76,15 @@
                   </button>
                 </li>
               </ul>
-              <div class="sticky p-4 flex flex-row items-center justify-center">
-                <p class="basis-1/4 small-font-size bold-font-weight light-font-family text-dark-gray">
+              <div class="sticky items-footer p-4 flex flex-row md:items-center md:justify-center">
+                <p v-if="isMobile" class="basis-1/4 small-font-size bold-font-weight light-font-family text-dark-gray">
                   {{ todo.length }} item{{ todo.length > 1 ? 's' : '' }} left
                 </p>
-                <div class="basis-2/4 ml-6">
+                <p v-if="!isMobile" class="basis-1/3 small-font-size bold-font-weight light-font-family text-dark-gray">
+                  {{ todo.length }} item{{ todo.length > 1 ? 's' : '' }} left
+                </p>
+                <div v-if="isMobile" class="grow ml-6"></div>
+                <div v-if="!isMobile" class="basis-2/4 ml-6">
                   <button @mouseover="onHoverAllItemsButton" @mouseleave="onLeaveAllItemsButton"
                     @click="onClickAllItemsButton" :class="allItemsButtonColor" class="m-1">All</button>
                   <button @mouseover="onHoverActiveItemsButton" @mouseleave="onLeaveActiveItemsButton"
@@ -84,15 +92,46 @@
                   <button @mouseover="onHoverCompletedItemsButton" @mouseleave="onLeaveCompletedItemsButton"
                     @click="onClickCompletedItemsButton" :class="completedItemsButtonColor" class="m-1">Completed</button>
                 </div>
-                <button type="button" @mouseover="onHoverClearCompleted" @mouseleave="onLeaveClearCompleted"
-                  :class="clearCompletedTextColor" class="basis-1/4 small-font-size">
+                <button v-if="!isMobile" type="button" @mouseover="onHoverClearCompleted"
+                  @mouseleave="onLeaveClearCompleted" :class="clearCompletedTextColor" class="basis-1/4 small-font-size">
+                  Clear Completed
+                </button>
+                <button v-if="isMobile" type="button" @mouseover="onHoverClearCompleted"
+                  @mouseleave="onLeaveClearCompleted" :class="clearCompletedTextColor" class="basis-1/3 small-font-size">
                   Clear Completed
                 </button>
               </div>
             </div>
           </div>
         </div>
-        <div class="basis-1/12 w-4/12">
+        <div class="basis-1/12 lg:w-4/12 xl:w-4/12 sm:w-10/12 md:w-10/12">
+          <div v-if="isMobile"
+            class="p-4 flex flex-row items-center justify-center sm:content-around bg-teal-lightest buttons-box w-full">
+            <!-- <p class="basis-1/4 small-font-size bold-font-weight light-font-family text-dark-gray">
+              {{ todo.length }} item{{ todo.length > 1 ? 's' : '' }} left
+            </p> -->
+            <!-- <div class="basis-2/4 ml-6"> -->
+            <!-- <div class="grow"></div> -->
+            <button @mouseover="onHoverAllItemsButton" @mouseleave="onLeaveAllItemsButton" @click="onClickAllItemsButton"
+              :class="allItemsButtonColor" class="m-1">All</button>
+            <button @mouseover="onHoverActiveItemsButton" @mouseleave="onLeaveActiveItemsButton"
+              @click="onClickActiveItemsButton" :class="activeItemsButtonColor" class="m-1">Active</button>
+            <button @mouseover="onHoverCompletedItemsButton" @mouseleave="onLeaveCompletedItemsButton"
+              @click="onClickCompletedItemsButton" :class="completedItemsButtonColor" class="m-1">Completed</button>
+            <!-- <div class="grow"></div> -->
+            <!-- </div> -->
+            <!-- <button type="button" @mouseover="onHoverClearCompleted" @mouseleave="onLeaveClearCompleted"
+              :class="clearCompletedTextColor" class="basis-1/4 small-font-size">
+              Clear Completed
+            </button> -->
+          </div>
+          <!-- <div class="h-100 w-full flex items-center justify-center">
+            <p class="text-gray-500 small-font-size bold-font-weight text-light-gray">
+              Drag and drop to reorder list
+            </p>
+          </div> -->
+        </div>
+        <div class="basis-1/12 lg:w-4/12 xl:w-4/12 sm:w-10/12 md:w-10/12">
           <div class="h-100 w-full flex items-center justify-center">
             <p class="text-gray-500 small-font-size bold-font-weight text-light-gray">
               Drag and drop to reorder list
@@ -104,7 +143,7 @@
   </div>
 </template>
 <script setup>
-import { ref, onBeforeMount } from 'vue';
+import { ref, onBeforeMount, computed } from 'vue';
 const colorMode = useColorMode();
 
 // data init
@@ -136,6 +175,10 @@ onBeforeMount(async () => {
   await fetchTodoData();
 });
 
+
+const isMobile = computed(() => {
+  return window.innerWidth <= 800;
+});
 
 const fetchTodoData = async () => {
   todo.value = await $fetch('http://localhost:4000/api/todos');
@@ -427,15 +470,6 @@ const useLightMode = () => {
   color: hsl(233, 14%, 35%);
 }
 
-/*
-- Very Dark Blue: hsl(235, 21%, 11%)
-- Very Dark Desaturated Blue: hsl(235, 24%, 19%)
-- Light Grayish Blue: hsl(234, 39%, 85%)
-- Light Grayish Blue (hover): hsl(236, 33%, 92%)
-- Dark Grayish Blue: hsl(234, 11%, 52%)
-- Very Dark Grayish Blue: hsl(233, 14%, 35%)
-- Very Dark Grayish Blue: hsl(237, 14%, 26%)
-*/
 .dark .main-background {
   background-color: hsl(235, 21%, 11%);
 }
@@ -455,10 +489,7 @@ button {
 .light .bg-desktop {
   background: url('~/assets/images/bg-desktop-light.jpg');
   background-repeat: no-repeat;
-  /*background-size: cover;*/
   background-size: cover;
-  /* width: 100%;
-  min-height: 100%; */
   min-height: 28vh;
   max-width: 100%;
 }
@@ -467,9 +498,100 @@ button {
   background: url('~/assets/images/bg-desktop-dark.jpg');
   background-repeat: no-repeat;
   background-size: cover;
-  /*background-size: 100%;*/
   min-height: 28vh;
   max-width: 100%;
+}
+
+.item-style {
+  padding: 1rem !important;
+}
+
+@media only screen and (max-width: 375px) {
+  .light .bg-desktop {
+    background: url('~/assets/images/bg-mobile-light.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 28vh;
+    max-width: 100vw;
+    width: 100vw;
+  }
+  
+  .dark .bg-desktop {
+    background: url('~/assets/images/bg-mobile-dark.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 28vh;
+    max-width: 100vw;
+    width: 100vw;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+
+  html,
+  body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+  }
+
+  .w-screen {
+    height: 100vh !important;
+    max-height: 100vh !important;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+  }
+
+  p,
+  .normal-font-size,
+  .small-font-size {
+    font-size: 12px !important;
+  }
+
+  .w-full {
+    width: 80vw;
+  }
+
+  .main-content {
+    padding-left: 8vw;
+    padding-right: 8vw;
+    max-height: 100% !important;
+    row-gap: 0.75rem !important;
+    transform: translateY(-25%) !important;
+  }
+
+  .text-h1 {
+    font-size: 1.5em !important;
+    width: 70vw !important;
+  }
+
+  .input-box {
+    height: 2.5rem !important;
+  }
+
+  .item-style {
+    padding: 0.5rem !important;
+  }
+
+  .items-footer {
+    padding: 0.75rem !important;
+  }
+
+  .buttons-box {
+    padding: 0.75rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  .new-todo-input {
+    margin-left: 0.5rem !important;
+  }
+
+  .main-background {
+    max-height: 65vh !important;
+  }
 }
 
 .light .bg-mobile-light {
@@ -552,12 +674,26 @@ input:-ms-input-placeholder {
   --tw-shadow: 0 10px 100px 0 rgb(0 0 0 / 0.1), 0 10px 20px -20px rgb(0 0 0 / 0.1) !important
 }
 
+.input-box {
+  height: 3.5rem;
+}
+
 .light .input-box {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
 .dark .input-box {
+  background-color: hsl(235, 24%, 19%) !important;
+
+}
+
+.light .buttons-box {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.dark .buttons-box {
   background-color: hsl(235, 24%, 19%) !important;
 
 }
