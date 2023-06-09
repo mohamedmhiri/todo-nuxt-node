@@ -41,8 +41,8 @@ module.exports = {
     },
     delete: async (req, res) => {
         try {
-            const id = req.params.id;
-            const deletedTodo = await todoService.delete(id);
+            const ids = req.query.ids;
+            const deletedTodo = await todoService.delete(ids);
             res.status(200);
             res.json(deletedTodo);
         } catch (e) {

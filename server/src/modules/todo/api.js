@@ -9,6 +9,6 @@ router
     .get('/todos/:id', todoController.get)
     .post('/todos', todoController.create)
     .put('/todos/:id', todoController.update)
-    .delete('/todos/:id', todoController.delete);
+    .delete('/todos', todoController.delete);
     
 module.exports = router;

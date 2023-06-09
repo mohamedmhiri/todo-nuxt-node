@@ -31,7 +31,7 @@
               @keyup="displayCurrentlyTypingSpan" @mousedown="displayCurrentlyTypingSpan"
               @mouseleave="hideCurrentlyTypingSpan">
               <label class="checkbox-block" for="newTodoState" @mouseover="showWhiteMark()" @mouseleave="hideWhiteMark()">
-                <input class="todo-checkbox" type="checkbox" id="newTodoState" :checked="newTodo.state"
+                <input class="todo-checkbox" type="checkbox" id="newTodoState" :checked="newTodo.isCompleted"
                   @change="toggleNewTodoItemState()" />
                 <span class="checkmark" ref="checkMark"></span>
                 <span class="hide-white-mark" ref="whiteMark"></span>
@@ -98,11 +98,11 @@
                   <button @mouseover="onHoverCompletedItemsButton" @mouseleave="onLeaveCompletedItemsButton"
                     @click="onClickCompletedItemsButton" :class="completedItemsButtonColor" class="m-1">Completed</button>
                 </div>
-                <button v-if="!isMobile" type="button" @mouseover="onHoverClearCompleted"
+                <button v-if="!isMobile" type="button" @mouseover="onHoverClearCompleted" @click="onClearCompleted"
                   @mouseleave="onLeaveClearCompleted" :class="clearCompletedTextColor" class="basis-1/4 small-font-size">
                   Clear Completed
                 </button>
-                <button v-if="isMobile" type="button" @mouseover="onHoverClearCompleted"
+                <button v-if="isMobile" type="button" @mouseover="onHoverClearCompleted" @click="onClearCompleted"
                   @mouseleave="onLeaveClearCompleted" :class="clearCompletedTextColor" class="basis-1/3 small-font-size">
                   Clear Completed
                 </button>
@@ -138,7 +138,7 @@ const colorMode = useColorMode();
 
 // data init
 const todo = ref([]);
-const newTodo = ref({ state: false, label: '' });
+const newTodo = ref({ isCompleted: false, label: '' });
 const nextPosition = ref(0);
 const currentlyTypingSpanIsDisplayed = ref(false);
 let todoItemStateVModels = ref([]);
@@ -150,8 +150,6 @@ const clearCompletedTextColor = ref('bold-font-weight light-font-family text-dar
 const allItemsButtonColor = ref('small-font-size bold-font-weight normal-font-family text-bright-blue');
 const activeItemsButtonColor = ref('small-font-size bold-font-weight normal-font-family text-light-gray');
 const completedItemsButtonColor = ref('small-font-size bold-font-weight normal-font-family text-light-gray');
-// todo items marked as completed
-const itemCompleted = ref('');
 // filtered todo
 const filteredTodo = ref([]);
 
@@ -176,16 +174,15 @@ const fetchTodoData = async () => {
   const todos = await $fetch('http://localhost:4000/api/todos');
   todo.value = todos;
   filteredTodo.value = todos;
-  todoItemStateVModels.value = todo.value.map(i => i.state === 'completed');
+  todoItemStateVModels.value = todo.value.map(i => i.isCompleted === true);
 }
 
 const addTodo = async () => {
   let nextPositionInTodo = todo.value.map(t => t.position).reduce((p, v) => p > v ? p : v);
   nextPosition.value = nextPositionInTodo++;
-  newTodo.value.state = newTodo.value.state ? 'completed' : 'active';
   const createNewTodo = Object.assign({ position: nextPosition.value }, newTodo.value);
   await $fetch('http://localhost:4000/api/todos', { method: 'POST', body: createNewTodo });
-  newTodo.value = { state: false, label: '' };
+  newTodo.value = { isCompleted: false, label: '' };
   await fetchTodoData();
 }
 
@@ -217,7 +214,7 @@ const hideWhiteMarkByKey = (key) => {
   checkMarks.value[key].classList.value = 'checkmark';
 }
 const showWhiteMark = () => {
-  if (newTodo.value.state === true) return;
+  if (newTodo.value.isCompleted === true) return;
   whiteMark.value.classList.value = 'show-white-mark';
   checkMark.value.classList.value = 'hide-checkmark';
 }
@@ -229,14 +226,15 @@ const toggleTodoItemState = (key) => {
   hideWhiteMarkByKey(key);
   if (typeof todoItemStateVModels.value[key] !== 'boolean') return;
   todoItemStateVModels.value[key] = !todoItemStateVModels.value[key];
+
   todoItems.value[key].classList.value = !todoItems.value[key].classList.value.includes('line-through') ?
     'w-full ml-9 normal-font-weight normal-font-family line-through text-very-light-gray pointer' :
     'w-full ml-9 normal-font-weight normal-font-family text-very-dark-gray pointer';
 }
 const toggleNewTodoItemState = () => {
   hideWhiteMark();
-  if (typeof newTodo.value.state !== 'boolean') return;
-  newTodo.value.state = !newTodo.value.state;
+  if (typeof newTodo.value.isCompleted !== 'boolean') return;
+  newTodo.value.isCompleted = !newTodo.value.isCompleted;
 }
 
 const onHoverClearCompleted = () => {
@@ -287,7 +285,7 @@ const onHoverActiveItemsButton = () => {
 }
 
 const onClickActiveItemsButton = () => {
-  filteredTodo.value = todo.value.filter(t => t.state !== 'completed');
+  filteredTodo.value = todo.value.filter(t => t.isCompleted === false);
   activeItemsButtonColor.value = getPrimaryFilterButtonStyle();
   // TODO will have a parent component and 3 button filter child components
   // clicking on one of them will change the component class style
@@ -304,7 +302,7 @@ const onLeaveActiveItemsButton = () => {
 }
 
 const onClickCompletedItemsButton = () => {
-  filteredTodo.value = todo.value.filter(t => t.state === 'completed');
+  filteredTodo.value = todo.value.filter(t => t.isCompleted === true);
   completedItemsButtonColor.value = getPrimaryFilterButtonStyle();
   // TODO will have a parent component and 3 button filter child components
   // clicking on one of them will change the component class style
@@ -334,7 +332,14 @@ const useLightMode = () => {
 }
 
 const deleteTodo = async (item) => {
-  await $fetch(`http://localhost:4000/api/todos/${item._id}`, { method: 'DELETE' });
+  await $fetch(`http://localhost:4000/api/todos?ids=${item._id}`, { method: 'DELETE' });
+  await fetchTodoData();
+}
+
+const onClearCompleted = async () => {
+  const completedIndexes = todoItemStateVModels.value.map((v, key) => Object.assign({ key }, { isCompleted: v })).filter(v => v.isCompleted === true).map(v => v.key);
+  const completedIds = todo.value.filter((v, key) => completedIndexes.includes(key)).map(v => v._id);
+  await $fetch(`http://localhost:4000/api/todos?ids=${completedIds.join(',')}`, { method: 'DELETE' });
   await fetchTodoData();
 }
 

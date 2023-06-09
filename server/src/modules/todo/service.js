@@ -7,7 +7,7 @@ module.exports = {
         try {
             let dbQuery = Todo;
             dbQuery = query.id && query.id.length ? dbQuery.findById(query.id) : dbQuery.find();
-            return dbQuery.select('label _id position state').sort({ position: 1 }).exec();
+            return dbQuery.select('label _id position isCompleted').sort({ position: 1 }).exec();
         } catch (e) {
             console.error(e);
             throw e;
@@ -24,11 +24,12 @@ module.exports = {
         }
         return { message: 'todo not found!' };
     },
-    delete: async (id) => {
-        const todoToDelete = await Todo.findById(id);
-        if (todoToDelete) {
-            return Todo.findByIdAndDelete(id);
+    delete: async (ids) => {
+        const _ids = ids.split(',');
+        const todoToDelete = await Todo.find({ _id: { '$in': _ids } });
+        if (todoToDelete.length === _ids.length) {
+            return Todo.deleteMany({ _id: { '$in': _ids } });
         }
-        return { message: 'todo not found!' };
+        return { message: 'todos not found!' };
     },
 };
