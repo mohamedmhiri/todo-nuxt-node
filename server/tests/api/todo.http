@@ -9,7 +9,7 @@ POST http://localhost:4000/api/todos HTTP/1.1
 content-type: application/json
 
 {
-    "state": "active",
+    "isCompleted": false,
     "label": "pp",
     "position": 7
 }
@@ -19,8 +19,8 @@ PUT http://localhost:4000/api/todos/647422a12d805217b553eeb5 HTTP/1.1
 content-type: application/json
 
 {
-    "state": "completed"
+    "isCompleted": true
 }
 
 ###
-DELETE http://localhost:4000/api/todos/647423342d805217b553eec2 HTTP/1.1
+DELETE http://localhost:4000/api/todos?ids=647423342d805217b553eec2 HTTP/1.1
