@@ -673,6 +673,7 @@ input:-ms-input-placeholder {
 
 .todo-list {
   max-height: 40vh;
+  min-height: 40vh;
   overflow-y: auto;
 }
 
