@@ -37,12 +37,14 @@
                 <span class="hide-white-mark" ref="whiteMark"></span>
               </label>
               <div class="flex items-center grow">
-                <span v-if="!isMobile" :class="currentlyTypingSpanIsDisplayed ? 'display-content' : 'hidden-content'"
+                <span v-if="isMounted && !isMobile"
+                  :class="currentlyTypingSpanIsDisplayed ? 'display-content' : 'hidden-content'"
                   class="ml-9 flex select-none items-center pl-3 text-very-dark-gray sm:text-sm bg-transparent"
                   @keyup="displayCurrentlyTypingSpan" @mousedown="displayCurrentlyTypingSpan"
                   @mouseleave="hideCurrentlyTypingSpan">Currently
                   typing</span>
-                <span v-if="!isMobile" :class="currentlyTypingSpanIsDisplayed ? 'display-content' : 'hidden-content'"
+                <span v-if="isMounted && !isMobile"
+                  :class="currentlyTypingSpanIsDisplayed ? 'display-content' : 'hidden-content'"
                   class="ml-1 flex select-none items-center pl-3 text-gray-500 sm:text-sm bg-transparent text-bright-blue"
                   @keyup="displayCurrentlyTypingSpan" @mousedown="displayCurrentlyTypingSpan"
                   @mouseleave="hideCurrentlyTypingSpan">
@@ -58,39 +60,45 @@
         <div class="grow lg:w-4/12 xl:w-4/12 sm:w-10/12 md:w-10/12">
           <div class="h-100 max-w-screen-xl flex bg-teal-lightest">
             <div class="list-box rounded shadow w-full">
-              <ul class="divide-y divide-solid todo-list">
-                <li v-for="(item, key) in filteredTodo" :key="item._id" class="flex item-style items-center"
-                  @mouseover="showXButton(key)" @mouseleave="hideXButton(key)">
-                  <label class="checkbox-block" :for="'todo-item-' + key" @mouseover="showWhiteMarkByKey(key)"
-                    @mouseleave="hideWhiteMarkByKey(key)">
-                    <input class="todo-checkbox" type="checkbox" :id="'todo-item-' + key"
-                      :checked="todoItemStateVModels[key]" @change="toggleTodoItemState(key)" />
-                    <span class="checkmark" :ref="el => { checkMarks[key] = el }"></span>
-                    <span class="hide-white-mark" :ref="el => { whiteMarks[key] = el }"></span>
-                  </label>
-                  <p @click="toggleTodoItemState(key)"
-                    :class="todoItemStateVModels[key] ? 'line-through text-very-light-gray' : 'text-very-dark-gray'"
-                    class="w-full ml-9 normal-font-weight normal-font-family pointer"
-                    :ref="el => { todoItems[key] = el }">
-                    {{ item.label }}
-                  </p>
-                  <button type="button" class="hide-button" :ref="el => { xButtons[key] = el }" @click="deleteTodo(item)">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                      stroke="currentColor" class="w-6 h-6 x-button">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </li>
-              </ul>
+              <draggable v-model="filteredTodo" tag="ul" item-key="_id" class="divide-y divide-solid todo-list"
+                @update="moveItem">
+                <template #item="{ element, index }">
+                  <li class="flex item-style items-center" @mouseover="showXButton(index)"
+                    @mouseleave="hideXButton(index)">
+                    <label class="checkbox-block" :for="'todo-item-' + index" @mouseover="showWhiteMarkByKey(index)"
+                      @mouseleave="hideWhiteMarkByKey(index)">
+                      <input class="todo-checkbox" type="checkbox" :id="'todo-item-' + index"
+                        :checked="todoItemStateVModels[index]" @change="toggleTodoItemState(index)" />
+                      <span class="checkmark" :ref="el => { checkMarks[index] = el }"></span>
+                      <span class="hide-white-mark" :ref="el => { whiteMarks[index] = el }"></span>
+                    </label>
+                    <p @click="toggleTodoItemState(index)"
+                      :class="todoItemStateVModels[index] ? 'line-through text-very-light-gray' : 'text-very-dark-gray'"
+                      class="w-full ml-9 normal-font-weight normal-font-family pointer"
+                      :ref="el => { todoItems[index] = el }">
+                      {{ element.label }}
+                    </p>
+                    <button type="button" class="hide-button" :ref="el => { xButtons[index] = el }"
+                      @click="deleteTodo(element)">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6 x-button">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </li>
+                </template>
+              </draggable>
               <div class="sticky items-footer p-4 flex flex-row md:items-center md:justify-center">
-                <p v-if="isMobile" class="basis-1/4 small-font-size bold-font-weight light-font-family text-dark-gray">
-                  {{ filteredTodo.length }} item{{ filteredTodo.length > 1 ? 's' : '' }} left
+                <p v-if="isMounted && isMobile"
+                  class="basis-1/4 small-font-size bold-font-weight light-font-family text-dark-gray">
+                  {{ leftItems }} item{{ leftItems > 1 ? 's' : '' }} left
                 </p>
-                <p v-if="!isMobile" class="basis-1/3 small-font-size bold-font-weight light-font-family text-dark-gray">
-                  {{ filteredTodo.length }} item{{ filteredTodo.length > 1 ? 's' : '' }} left
+                <p v-if="isMounted && !isMobile"
+                  class="basis-1/3 small-font-size bold-font-weight light-font-family text-dark-gray">
+                  {{ leftItems }} item{{ leftItems > 1 ? 's' : '' }} left
                 </p>
-                <div v-if="isMobile" class="grow ml-6"></div>
-                <div v-if="!isMobile" class="basis-2/4 ml-6">
+                <div v-if="isMounted && isMobile" class="grow ml-6"></div>
+                <div v-if="isMounted && !isMobile" class="basis-2/4 ml-6">
                   <button @mouseover="onHoverAllItemsButton" @mouseleave="onLeaveAllItemsButton"
                     @click="onClickAllItemsButton" :class="allItemsButtonColor" class="m-1">All</button>
                   <button @mouseover="onHoverActiveItemsButton" @mouseleave="onLeaveActiveItemsButton"
@@ -98,12 +106,14 @@
                   <button @mouseover="onHoverCompletedItemsButton" @mouseleave="onLeaveCompletedItemsButton"
                     @click="onClickCompletedItemsButton" :class="completedItemsButtonColor" class="m-1">Completed</button>
                 </div>
-                <button v-if="!isMobile" type="button" @mouseover="onHoverClearCompleted" @click="onClearCompleted"
-                  @mouseleave="onLeaveClearCompleted" :class="clearCompletedTextColor" class="basis-1/4 small-font-size">
+                <button v-if="isMounted && !isMobile" type="button" @mouseover="onHoverClearCompleted"
+                  @click="onClearCompleted" @mouseleave="onLeaveClearCompleted" :class="clearCompletedTextColor"
+                  class="basis-1/4 small-font-size">
                   Clear Completed
                 </button>
-                <button v-if="isMobile" type="button" @mouseover="onHoverClearCompleted" @click="onClearCompleted"
-                  @mouseleave="onLeaveClearCompleted" :class="clearCompletedTextColor" class="basis-1/3 small-font-size">
+                <button v-if="isMounted && isMobile" type="button" @mouseover="onHoverClearCompleted"
+                  @click="onClearCompleted" @mouseleave="onLeaveClearCompleted" :class="clearCompletedTextColor"
+                  class="basis-1/3 small-font-size">
                   Clear Completed
                 </button>
               </div>
@@ -111,7 +121,7 @@
           </div>
         </div>
         <div class="basis-1/12 lg:w-4/12 xl:w-4/12 sm:w-10/12 md:w-10/12">
-          <div v-if="isMobile"
+          <div v-if="isMounted && isMobile"
             class="p-4 flex flex-row items-center justify-center sm:content-around bg-teal-lightest buttons-box w-full">
             <button @mouseover="onHoverAllItemsButton" @mouseleave="onLeaveAllItemsButton" @click="onClickAllItemsButton"
               :class="allItemsButtonColor" class="m-1">All</button>
@@ -132,12 +142,20 @@
     </div>
   </div>
 </template>
+<script>
+import draggable from 'vuedraggable';
+export default {
+  components: { draggable }
+}
+</script>
 <script setup>
-import { ref, onBeforeMount, computed } from 'vue';
+import { ref, onBeforeMount, onMounted, computed, } from 'vue';
 const colorMode = useColorMode();
 
 // data init
 const todo = ref([]);
+// filtered todo
+const filteredTodo = ref([]);
 const newTodo = ref({ isCompleted: false, label: '' });
 const nextPosition = ref(0);
 const currentlyTypingSpanIsDisplayed = ref(false);
@@ -150,8 +168,9 @@ const clearCompletedTextColor = ref('bold-font-weight light-font-family text-dar
 const allItemsButtonColor = ref('small-font-size bold-font-weight normal-font-family text-bright-blue');
 const activeItemsButtonColor = ref('small-font-size bold-font-weight normal-font-family text-light-gray');
 const completedItemsButtonColor = ref('small-font-size bold-font-weight normal-font-family text-light-gray');
-// filtered todo
-const filteredTodo = ref([]);
+// is mounted
+const isMounted = ref(false);
+
 
 // $refs 
 const checkMark = ref(null);
@@ -165,9 +184,17 @@ onBeforeMount(async () => {
   await fetchTodoData();
 });
 
+onMounted(() => {
+  isMounted.value = true;
+});
+
 
 const isMobile = computed(() => {
-  return window.innerWidth <= 800;
+  return window !== undefined ? window.innerWidth <= 800 : undefined;
+});
+
+const leftItems = computed(() => {
+  return todo.value.filter(v => v.isCompleted === false).length;
 });
 
 const fetchTodoData = async () => {
@@ -178,12 +205,14 @@ const fetchTodoData = async () => {
 }
 
 const addTodo = async () => {
-  let nextPositionInTodo = todo.value.map(t => t.position).reduce((p, v) => p > v ? p : v);
-  nextPosition.value = nextPositionInTodo++;
+  let nextPositionInTodo = todo.value.length ? (todo.value[todo.value.length - 1].position + 1) : 0;
+  nextPosition.value = nextPositionInTodo;
   const createNewTodo = Object.assign({ position: nextPosition.value }, newTodo.value);
-  await $fetch('http://localhost:4000/api/todos', { method: 'POST', body: createNewTodo });
+  const addedTodo = await $fetch('http://localhost:4000/api/todos', { method: 'POST', body: createNewTodo });
   newTodo.value = { isCompleted: false, label: '' };
-  await fetchTodoData();
+  todo.value.push(addedTodo);
+  filteredTodo.value = todo.value;
+  todoItemStateVModels.value = todo.value.map(i => i.isCompleted === true);
 }
 
 const displayCurrentlyTypingSpan = () => {
@@ -222,7 +251,10 @@ const hideWhiteMark = () => {
   whiteMark.value.classList.value = 'hide-white-mark';
   checkMark.value.classList.value = 'checkmark';
 }
-const toggleTodoItemState = (key) => {
+const toggleTodoItemState = async (key) => {
+  await $fetch(`http://localhost:4000/api/todos/${filteredTodo.value[key]._id}`, { method: 'PUT', body: { isCompleted: !filteredTodo.value[key].isCompleted } });
+  filteredTodo.value[key].isCompleted = !filteredTodo.value[key].isCompleted;
+  todo.value[key].isCompleted = !todo.value[key].isCompleted;
   hideWhiteMarkByKey(key);
   if (typeof todoItemStateVModels.value[key] !== 'boolean') return;
   todoItemStateVModels.value[key] = !todoItemStateVModels.value[key];
@@ -333,14 +365,32 @@ const useLightMode = () => {
 
 const deleteTodo = async (item) => {
   await $fetch(`http://localhost:4000/api/todos?ids=${item._id}`, { method: 'DELETE' });
-  await fetchTodoData();
+  todo.value = todo.value.filter(v => v._id !== item._id);
+  filteredTodo.value = filteredTodo.value.filter(v => v._id !== item._id);
 }
 
 const onClearCompleted = async () => {
   const completedIndexes = todoItemStateVModels.value.map((v, key) => Object.assign({ key }, { isCompleted: v })).filter(v => v.isCompleted === true).map(v => v.key);
   const completedIds = todo.value.filter((v, key) => completedIndexes.includes(key)).map(v => v._id);
-  await $fetch(`http://localhost:4000/api/todos?ids=${completedIds.join(',')}`, { method: 'DELETE' });
-  await fetchTodoData();
+  if (completedIds.length) {
+    await $fetch(`http://localhost:4000/api/todos?ids=${completedIds.join(',')}`, { method: 'DELETE' });
+    todo.value = todo.value.filter(v => !completedIds.includes(v._id));
+    filteredTodo.value = filteredTodo.value.filter(v => !completedIds.includes(v._id));
+  }
+}
+
+const moveItem = async (update) => {
+  const newPosition = filteredTodo.value[update.newIndex].position;
+  if (update.newIndex < update.oldIndex) {
+    for (let index = update.newIndex; index < update.oldIndex; index++) {
+      await $fetch(`http://localhost:4000/api/todos/${filteredTodo.value[index]._id}`, { method: 'PUT', body: { position: filteredTodo.value[index + 1].position } });
+    }
+  } else {
+    for (let index = (update.oldIndex + 1); index < (update.newIndex + 1); index++) {
+      await $fetch(`http://localhost:4000/api/todos/${filteredTodo.value[index]._id}`, { method: 'PUT', body: { position: filteredTodo.value[index - 1].position } });
+    }
+  }
+  await $fetch(`http://localhost:4000/api/todos/${filteredTodo.value[update.oldIndex]._id}`, { method: 'PUT', body: { position: newPosition } });
 }
 
 </script>
