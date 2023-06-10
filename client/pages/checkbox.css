@@ -113,6 +113,16 @@
     border: 5px solid linear-gradient(to bottom right, hsl(192, 100%, 67%), hsl(280, 87%, 65%)) !important;
   }
 
+  .show-white-mark {
+    height: 19px;
+    width: 19px;
+  }
+
+  .hide-checkmark {
+    width: 21px;
+    height: 21px;
+  }
+
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */
