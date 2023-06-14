@@ -2,7 +2,7 @@
   <the-paragraph :paragraph-classes="boxClass" :description="leftItemsDescription"/>
 </template>
 <script>
-import TheParagraph from '@/components/ui/TheParagraph.vue';
+import TheParagraph from './ui/TheParagraph.vue';
 export default {
   name: 'LeftItems',
   components: {
@@ -11,7 +11,7 @@ export default {
 }
 </script>
 <script setup>
-import { useTodoStore } from '@/store/todo';
+import { useTodoStore } from '../store/todo';
 
 const props = defineProps(['boxClass']);
 

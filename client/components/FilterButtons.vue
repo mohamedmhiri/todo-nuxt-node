@@ -12,7 +12,7 @@
   </div>
 </template>
 <script>
-import TheButton from '@/components/ui/TheButton.vue';
+import TheButton from './ui/TheButton.vue';
 
 export default {
   name: 'FilterButtons',
@@ -22,8 +22,8 @@ export default {
 }
 </script>
 <script setup>
-import { useTodoStore } from '@/store/todo';
-import { SMALL_NORMAL_BOLD_FONT, TEXT_BRIGHT_BLUE, TEXT_VERY_DARK_GRAY, TEXT_LIGHT_GRAY } from '@/constants';
+import { useTodoStore } from '../store/todo';
+import { SMALL_NORMAL_BOLD_FONT, TEXT_BRIGHT_BLUE, TEXT_VERY_DARK_GRAY, TEXT_LIGHT_GRAY } from '../constants';
 
 const props = defineProps([
   'boxClass'

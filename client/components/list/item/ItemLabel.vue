@@ -2,7 +2,7 @@
   <the-paragraph :paragraph-classes="paragraphClasses" :description="element.label" @paragraph-click="onLabelClick"/>
 </template>
 <script>
-import TheParagraph from '@/components/ui/TheParagraph.vue';
+import TheParagraph from '../../ui/TheParagraph.vue';
 export default {
   name: 'ItemLabel',
   components: {

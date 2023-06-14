@@ -7,8 +7,8 @@
   </div>
 </template>
 <script>
-import HeroSection from '@/layouts/HeroSection.vue';
-import MainSection from '@/components/MainSection.vue';
+import HeroSection from '../layouts/HeroSection.vue';
+import MainSection from '../components/MainSection.vue';
 export default {
   components: {
     HeroSection,

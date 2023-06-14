@@ -29,7 +29,7 @@
   </div>
 </template>
 <script>
-import TheCheckbox from '@/components/ui/TheCheckbox.vue';
+import TheCheckbox from './ui/TheCheckbox.vue';
 
 export default {
   name: 'FormSection',
@@ -40,8 +40,8 @@ export default {
 </script>
 <script setup>
 import { ref } from 'vue';
-import { useTodoStore } from '@/store/todo';
-import { FLEX_CLASSES, CHECK_MARK_CLASSES, HIDE_CHECK_MARK_CLASSES, WHITE_MARK_CLASSES, HIDE_WHITE_MARK_CLASSES } from '@/constants';
+import { useTodoStore } from '../store/todo';
+import { FLEX_CLASSES, CHECK_MARK_CLASSES, HIDE_CHECK_MARK_CLASSES, WHITE_MARK_CLASSES, HIDE_WHITE_MARK_CLASSES } from '../constants';
 
 const props = defineProps([
   'isMobile',

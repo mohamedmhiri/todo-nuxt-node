@@ -15,11 +15,11 @@
   </div>
 </template>
 <script>
-import DragAndDropParagraph from '@/layouts/DragAndDropParagraph.vue';
-import FilterButtons from '@/components/FilterButtons.vue';
-import FormSection from '@/components/FormSection.vue';
-import ListSection from '@/components/ListSection.vue';
-import TopSection from '@/components/TopSection.vue';
+import DragAndDropParagraph from '../layouts/DragAndDropParagraph.vue';
+import FilterButtons from './FilterButtons.vue';
+import FormSection from './FormSection.vue';
+import ListSection from './ListSection.vue';
+import TopSection from './TopSection.vue';
 export default {
   name: 'MainSection',
   components: {
@@ -33,8 +33,8 @@ export default {
 </script>
 <script setup>
 import { ref, onBeforeMount, computed, } from 'vue';
-import { useTodoStore } from '@/store/todo';
-import { FLEX_CLASSES } from '@/constants';
+import { useTodoStore } from '../store/todo';
+import { FLEX_CLASSES } from '../constants';
 
 const filterButtonsBoxClass = ref(`${FLEX_CLASSES} p-4 flex flex-row items-center justify-center sm:content-around bg-teal-lightest buttons-box w-full`);
 // is mounted

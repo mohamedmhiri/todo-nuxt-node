@@ -5,7 +5,7 @@
   </the-button>
 </template>
 <script>
-import TheButton from '@/components/ui/TheButton.vue';
+import TheButton from './ui/TheButton.vue';
 
 export default {
   name: 'ClearCompleted',
@@ -16,7 +16,7 @@ export default {
 </script>
 <script setup>
 import { ref, computed } from 'vue';
-import { useTodoStore } from '@/store/todo';
+import { useTodoStore } from '../store/todo';
 
 const props = defineProps(['isMobile']);
 

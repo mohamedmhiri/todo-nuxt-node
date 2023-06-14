@@ -22,8 +22,8 @@ export default {
 }
 </script>
 <script setup>
-import { useTodoStore } from '@/store/todo';
-import { CHECK_MARK_CLASSES, HIDE_CHECK_MARK_CLASSES, WHITE_MARK_CLASSES, HIDE_WHITE_MARK_CLASSES, SHOW_BUTTON, HIDE_BUTTON } from '@/constants';
+import { useTodoStore } from '../../store/todo';
+import { CHECK_MARK_CLASSES, HIDE_CHECK_MARK_CLASSES, WHITE_MARK_CLASSES, HIDE_WHITE_MARK_CLASSES, SHOW_BUTTON, HIDE_BUTTON } from '../../constants';
 
 const props = defineProps([
   'index',

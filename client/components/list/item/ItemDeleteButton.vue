@@ -7,7 +7,7 @@
   </the-button>
 </template>
 <script>
-import TheButton from '@/components/ui/TheButton.vue';
+import TheButton from '../../ui/TheButton.vue';
 
 export default {
   name: 'ItemDeleteButton',
@@ -17,7 +17,7 @@ export default {
 }
 </script>
 <script setup>
-import { useTodoStore } from '@/store/todo';
+import { useTodoStore } from '../../../store/todo';
 
 const props = defineProps([
   'deleteButtonClass',

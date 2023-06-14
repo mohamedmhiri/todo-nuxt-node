@@ -30,7 +30,7 @@
 </template>
 <script>
 import draggable from 'vuedraggable';
-import ClearCompleted from '@/components/ClearCompleted.vue';
+import ClearCompleted from './ClearCompleted.vue';
 import FilterButtons from './FilterButtons.vue';
 import LeftItems from './LeftItems.vue';
 import TodoItem from './list/TodoItem.vue';
@@ -47,7 +47,7 @@ export default {
 </script>
 <script setup>
 import { ref } from 'vue';
-import { useTodoStore } from '@/store/todo';
+import { useTodoStore } from '../store/todo';
 
 const props = defineProps([
   'isMobile',

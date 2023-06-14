@@ -25,7 +25,7 @@
   </div>
 </template>
 <script>
-import TheButton from '@/components/ui/TheButton.vue';
+import TheButton from './ui/TheButton.vue';
 
 export default {
   name: 'TopSection',
@@ -35,7 +35,7 @@ export default {
 }
 </script>
 <script setup>
-import { FLEX_CLASSES } from '@/constants';
+import { FLEX_CLASSES } from '../constants';
 const flexClasses = ref(FLEX_CLASSES);
 const colorMode = useColorMode();
 

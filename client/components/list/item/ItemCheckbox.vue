@@ -4,7 +4,7 @@
     @checkbox-change="onCheckboxChange" />
 </template>
 <script>
-import TheCheckbox from '@/components/ui/TheCheckbox.vue';
+import TheCheckbox from '../../ui/TheCheckbox.vue';
 
 export default {
   name: 'ItemCheckbox',
