@@ -13,7 +13,10 @@ export default defineNuxtConfig({
       link: [{ rel: 'icon', type: 'image/png', href: "/favicon-32x32.png" }]
     }
   },
-  modules: ['@nuxtjs/color-mode'],
+  modules: [
+    '@nuxtjs/color-mode',
+    '@pinia/nuxt',
+  ],
   colorMode: {
     preference: 'light', // default value of $colorMode.preference 
     hid: 'nuxt-color-mode-script',

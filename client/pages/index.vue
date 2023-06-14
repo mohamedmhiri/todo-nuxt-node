@@ -7,7 +7,7 @@
   </div>
 </template>
 <script>
-import HeroSection from '@/components/HeroSection.vue';
+import HeroSection from '@/layouts/HeroSection.vue';
 import MainSection from '@/components/MainSection.vue';
 export default {
   components: {
