@@ -550,3 +550,9 @@ input:-ms-input-placeholder {
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
 }
+
+@media (min-width: 924px) {
+  .container {
+      max-width: 100%;
+  }
+}
