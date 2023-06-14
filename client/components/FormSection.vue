@@ -1,5 +1,5 @@
 <template>
-  <div class="basis-1/12 lg:w-4/12 xl:w-4/12 sm:w-10/12 md:w-10/12">
+  <div :class="flexClasses">
     <div class="max-w-screen-xl">
       <div class="h-100 w-full flex items-center p-3 container input-box rounded">
         <!-- Add Todo checkbox -->
@@ -41,28 +41,30 @@ export default {
 <script setup>
 import { ref } from 'vue';
 import { useTodoStore } from '@/store/todo';
+import { FLEX_CLASSES, CHECK_MARK_CLASSES, HIDE_CHECK_MARK_CLASSES, WHITE_MARK_CLASSES, HIDE_WHITE_MARK_CLASSES } from '@/constants';
 
 const props = defineProps([
   'isMobile',
 ]);
 
 const newTodo = ref({ isCompleted: false, label: '' });
-const checkMarkClasses = ref('checkmark');
-const whiteMarkClasses = ref('hide-white-mark');
+const checkMarkClasses = ref(CHECK_MARK_CLASSES);
+const whiteMarkClasses = ref(HIDE_WHITE_MARK_CLASSES);
 const currentlyTypingSpanIsDisplayed = ref(false);
 const newTodoPlaceholder = ref('Create a new todo...');
 const newTodoCheckboxId = ref('new-todo-completion');
+const flexClasses = ref(FLEX_CLASSES);
 const store = useTodoStore();
 
 const onCheckboxHover = () => {
   if (newTodo.value.isCompleted === true) return;
-  whiteMarkClasses.value = 'show-white-mark';
-  checkMarkClasses.value = 'hide-checkmark';
+  whiteMarkClasses.value = WHITE_MARK_CLASSES;
+  checkMarkClasses.value = HIDE_CHECK_MARK_CLASSES;
 }
 
 const onCheckboxLeave = () => {
-  whiteMarkClasses.value = 'hide-white-mark';
-  checkMarkClasses.value = 'checkmark';
+  whiteMarkClasses.value = HIDE_WHITE_MARK_CLASSES;
+  checkMarkClasses.value = CHECK_MARK_CLASSES;
 }
 
 const onCheckboxChange = () => {

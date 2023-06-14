@@ -71,9 +71,9 @@ watch(
   { immediate: true }
 );
 
-const moveItem = async (update) => {
+const moveItem = async () => {
   for (let index = 0; index < todo.value.length; index++) {
-    await store.toggleItemPosition({ _id: todo.value[index]._id, position: index });    
+    await store.toggleItemPosition({ _id: todo.value[index]._id, position: index });
   }
 }
 </script>

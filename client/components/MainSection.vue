@@ -34,8 +34,9 @@ export default {
 <script setup>
 import { ref, onBeforeMount, computed, } from 'vue';
 import { useTodoStore } from '@/store/todo';
+import { FLEX_CLASSES } from '@/constants';
 
-const filterButtonsBoxClass = ref('basis-1/12 lg:w-4/12 xl:w-4/12 sm:w-10/12 md:w-10/12 p-4 flex flex-row items-center justify-center sm:content-around bg-teal-lightest buttons-box w-full');
+const filterButtonsBoxClass = ref(`${FLEX_CLASSES} p-4 flex flex-row items-center justify-center sm:content-around bg-teal-lightest buttons-box w-full`);
 // is mounted
 const isMounted = ref(false);
 

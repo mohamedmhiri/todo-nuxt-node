@@ -23,20 +23,21 @@ export default {
 </script>
 <script setup>
 import { useTodoStore } from '@/store/todo';
+import { SMALL_NORMAL_BOLD_FONT, TEXT_BRIGHT_BLUE, TEXT_VERY_DARK_GRAY, TEXT_LIGHT_GRAY } from '@/constants';
 
 const props = defineProps([
   'boxClass'
 ]);
 
 // buttons style
-const allItemsButtonColor = ref('m-1 small-font-size bold-font-weight normal-font-family text-bright-blue');
-const activeItemsButtonColor = ref('m-1 small-font-size bold-font-weight normal-font-family text-light-gray');
-const completedItemsButtonColor = ref('m-1 small-font-size bold-font-weight normal-font-family text-light-gray');
+const allItemsButtonColor = ref(`${SMALL_NORMAL_BOLD_FONT} ${TEXT_BRIGHT_BLUE}`);
+const activeItemsButtonColor = ref(`${SMALL_NORMAL_BOLD_FONT} ${TEXT_LIGHT_GRAY}`);
+const completedItemsButtonColor = ref(`${SMALL_NORMAL_BOLD_FONT} ${TEXT_LIGHT_GRAY}`);
 
 const store = useTodoStore();
 
-const getResetFilterButtonStyle = () => 'm-1 small-font-size bold-font-weight normal-font-family text-light-gray';
-const getPrimaryFilterButtonStyle = () => 'm-1 small-font-size bold-font-weight normal-font-family text-bright-blue';
+const getResetFilterButtonStyle = () => `${SMALL_NORMAL_BOLD_FONT} ${TEXT_LIGHT_GRAY}`;
+const getPrimaryFilterButtonStyle = () => `${SMALL_NORMAL_BOLD_FONT} ${TEXT_BRIGHT_BLUE}`;
 
 const onClickAllItemsButton = async () => {
   await store.filterAllTodo();
@@ -46,12 +47,12 @@ const onClickAllItemsButton = async () => {
 }
 
 const onHoverAllItemsButton = () => {
-  if (allItemsButtonColor.value.includes('text-bright-blue')) return;
-  allItemsButtonColor.value = 'm-1 small-font-size bold-font-weight normal-font-family text-very-dark-gray';
+  if (allItemsButtonColor.value.includes(TEXT_BRIGHT_BLUE)) return;
+  allItemsButtonColor.value = `${SMALL_NORMAL_BOLD_FONT} ${TEXT_VERY_DARK_GRAY}`;
 }
 
 const onLeaveAllItemsButton = () => {
-  if (allItemsButtonColor.value.includes('text-bright-blue')) return;
+  if (allItemsButtonColor.value.includes(TEXT_BRIGHT_BLUE)) return;
   allItemsButtonColor.value = getResetFilterButtonStyle();
 }
 
@@ -63,12 +64,12 @@ const onClickActiveItemsButton = async () => {
 }
 
 const onHoverActiveItemsButton = () => {
-  if (activeItemsButtonColor.value.includes('text-bright-blue')) return;
-  activeItemsButtonColor.value = 'm-1 small-font-size bold-font-weight normal-font-family text-very-dark-gray';
+  if (activeItemsButtonColor.value.includes(TEXT_BRIGHT_BLUE)) return;
+  activeItemsButtonColor.value = `${SMALL_NORMAL_BOLD_FONT} ${TEXT_VERY_DARK_GRAY}`;
 }
 
 const onLeaveActiveItemsButton = () => {
-  if (activeItemsButtonColor.value.includes('text-bright-blue')) return;
+  if (activeItemsButtonColor.value.includes(TEXT_BRIGHT_BLUE)) return;
   activeItemsButtonColor.value = getResetFilterButtonStyle();
 }
 
@@ -80,12 +81,12 @@ const onClickCompletedItemsButton = async () => {
 }
 
 const onHoverCompletedItemsButton = () => {
-  if (completedItemsButtonColor.value.includes('text-bright-blue')) return;
-  completedItemsButtonColor.value = 'm-1 small-font-size bold-font-weight normal-font-family text-very-dark-gray';
+  if (completedItemsButtonColor.value.includes(TEXT_BRIGHT_BLUE)) return;
+  completedItemsButtonColor.value = `${SMALL_NORMAL_BOLD_FONT} ${TEXT_VERY_DARK_GRAY}`;
 }
 
 const onLeaveCompletedItemsButton = () => {
-  if (completedItemsButtonColor.value.includes('text-bright-blue')) return;
+  if (completedItemsButtonColor.value.includes(TEXT_BRIGHT_BLUE)) return;
   completedItemsButtonColor.value = getResetFilterButtonStyle();
 }
 

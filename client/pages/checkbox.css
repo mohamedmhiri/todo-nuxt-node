@@ -64,15 +64,15 @@
   background-color: white;
 }
 
-.light .show-white-mark {
+.light .white-mark {
   background-color: white;
 }
 
-.dark .show-white-mark {
+.dark .white-mark {
   background-color: hsl(235, 24%, 19%);
 }
 
-.show-white-mark {
+.white-mark {
   display: block;
   position: absolute;
   top: 1px;
@@ -113,7 +113,7 @@
     border: 5px solid linear-gradient(to bottom right, hsl(192, 100%, 67%), hsl(280, 87%, 65%)) !important;
   }
 
-  .show-white-mark {
+  .white-mark {
     height: 19px;
     width: 19px;
   }

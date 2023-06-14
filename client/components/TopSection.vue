@@ -1,5 +1,5 @@
 <template>
-  <div class="basis-1/12 lg:w-4/12 xl:w-4/12 sm:w-10/12 md:w-10/12">
+  <div :class="flexClasses">
     <div class="h-100 max-w-screen-xl flex-row flex">
       <!-- Title section -->
       <h1 class="text-5xl text-h1 bold-font-family text-white grow tracking-widest w-full">
@@ -35,6 +35,8 @@ export default {
 }
 </script>
 <script setup>
+import { FLEX_CLASSES } from '@/constants';
+const flexClasses = ref(FLEX_CLASSES);
 const colorMode = useColorMode();
 
 const useDarkMode = () => colorMode.value = 'dark';

@@ -1,7 +1,8 @@
 <template>
   <li class="flex item-style items-center" @mouseover="showXButton" @mouseleave="hideXButton">
-    <item-checkbox :index="index" :element="element" :white-mark-classes="whiteMarkClasses" :check-mark-classes="checkMarkClasses"
-      @checkbox-hover="onCheckboxHover" @checkbox-leave="onCheckboxLeave" @checkbox-change="onItemCompletionChange" />
+    <item-checkbox :index="index" :element="element" :white-mark-classes="whiteMarkClasses"
+      :check-mark-classes="checkMarkClasses" @checkbox-hover="onCheckboxHover" @checkbox-leave="onCheckboxLeave"
+      @checkbox-change="onItemCompletionChange" />
     <item-label :element="element" @label-change="onItemCompletionChange" />
     <item-delete-button :element="element" :delete-button-class="deleteButtonClass" />
   </li>
@@ -22,13 +23,14 @@ export default {
 </script>
 <script setup>
 import { useTodoStore } from '@/store/todo';
+import { CHECK_MARK_CLASSES, HIDE_CHECK_MARK_CLASSES, WHITE_MARK_CLASSES, HIDE_WHITE_MARK_CLASSES, SHOW_BUTTON, HIDE_BUTTON } from '@/constants';
 
 const props = defineProps([
   'index',
   'element',
 ]);
 
-const deleteButtonClass = ref('hide-button');
+const deleteButtonClass = ref(HIDE_BUTTON);
 const checkMarkClasses = ref('');
 const whiteMarkClasses = ref('');
 
@@ -40,12 +42,12 @@ watch(
   (newIsCompleted) => {
     const itemClasses = {
       'checkMark': {
-        true: 'checkmark',
-        false: 'checkmark'
+        true: CHECK_MARK_CLASSES,
+        false: CHECK_MARK_CLASSES
       },
       'whiteMark': {
-        true: 'hide-white-mark',
-        false: 'show-white-mark',
+        true: HIDE_WHITE_MARK_CLASSES,
+        false: WHITE_MARK_CLASSES,
       },
     };
     checkMarkClasses.value = itemClasses['checkMark'][newIsCompleted];
@@ -54,18 +56,18 @@ watch(
   { immediate: true }
 );
 
-const showXButton = () => deleteButtonClass.value = 'show-button';
-const hideXButton = () => deleteButtonClass.value = 'hide-button';
+const showXButton = () => deleteButtonClass.value = SHOW_BUTTON;
+const hideXButton = () => deleteButtonClass.value = HIDE_BUTTON;
 
 const onCheckboxHover = () => {
   if (props.element.isCompleted === true) return;
-  whiteMarkClasses.value = 'show-white-mark';
-  checkMarkClasses.value = 'hide-checkmark';
+  whiteMarkClasses.value = WHITE_MARK_CLASSES;
+  checkMarkClasses.value = HIDE_CHECK_MARK_CLASSES;
 }
 
 const onCheckboxLeave = () => {
-  whiteMarkClasses.value = 'hide-white-mark';
-  checkMarkClasses.value = 'checkmark';
+  whiteMarkClasses.value = HIDE_WHITE_MARK_CLASSES;
+  checkMarkClasses.value = CHECK_MARK_CLASSES;
 }
 
 const onItemCompletionChange = async () => {
