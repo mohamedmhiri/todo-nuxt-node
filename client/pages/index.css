@@ -556,3 +556,7 @@ input:-ms-input-placeholder {
       max-width: 100%;
   }
 }
+
+.m-1 {
+  margin: 0.25rem !important;
+}
