@@ -506,12 +506,8 @@ input:-ms-input-placeholder {
     top: 5px !important;
     width: 4px !important;
     height: 8px !important;
-    border-width: 0 2px 2px 0 !important;
   }
 
-  .checkmark:after {
-    border: 5px solid var(--check-background) !important;
-  }
 
   .white-mark {
     height: 19px;
@@ -553,7 +549,7 @@ input:-ms-input-placeholder {
 
 @media (min-width: 924px) {
   .container {
-      max-width: 100%;
+    max-width: 100%;
   }
 }
 
